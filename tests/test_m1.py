@@ -2,6 +2,7 @@ import unittest
 from host.amiscene.table import sine,cosine,emit_asm
 from host.amiscene.bitplane import chunky_to_planar,interleave,emit_asm as emit_bitmap_asm,emit_incbin
 from host.amiscene.ilbm import dumps_ilbm,loads_ilbm
+from host.amiscene.image import rgb4,amiga_color_word,emit_palette_asm
 class T(unittest.TestCase):
  def test_sine(self):self.assertEqual(sine(4,100),[0,100,0,-100])
  def test_cos(self):self.assertEqual(cosine(4,100),[100,0,-100,0])
@@ -11,6 +12,13 @@ class T(unittest.TestCase):
  def test_interleave(self):self.assertEqual(interleave([bytes([1,2]),bytes([17,18])]),bytes([1,17,2,18]))
  def test_bitmap_asm(self):self.assertIn("dc.b $a1",emit_bitmap_asm(bytes([0xA1]),"pic"))
  def test_incbin(self):self.assertIn('incbin "pic.bin"',emit_incbin("pic.bin","pic"))
+ def test_ocs_rgb12(self):
+  self.assertEqual(rgb4((255,128,0)),(15,8,0));self.assertEqual(amiga_color_word((255,128,0)),0xf80)
+ def test_palette_asm(self):
+  s=emit_palette_asm([(0,0,0),(255,255,255)],"Pal");self.assertIn("dc.w $000,$fff",s);self.assertIn("Pal_count equ",s)
+ def test_known_planar_pattern(self):
+  px=[0,1,2,3,0,1,2,3]*2
+  p=chunky_to_planar(px,16,1,2);self.assertEqual(p,[bytes([0x55,0x55]),bytes([0x33,0x33])]);self.assertEqual(interleave(p),bytes([0x55,0x33,0x55,0x33]))
  def test_ilbm_roundtrip_raw(self):
   data=bytes([0xaa,0x55,0x33,0xcc]);blob=dumps_ilbm(16,1,2,data,[(0,0,0),(255,255,255)],0);a=loads_ilbm(blob);self.assertEqual(a["data"],data);self.assertEqual(a["planes"],2)
  def test_ilbm_roundtrip_byterun1(self):
