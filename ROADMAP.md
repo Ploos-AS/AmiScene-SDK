@@ -24,6 +24,7 @@
 - [x] Minimal 68000 Copper install/start/stop runtime
 - [x] DMA save/restore helpers
 - [x] A500/OCS reference source and qualification procedure
+- [x] Host CLI/parser/generator pipeline PASS (Python 3.10–3.13)
 - [ ] A500/OCS emulator runtime PASS
 
 ## M3 — AmiBlit
