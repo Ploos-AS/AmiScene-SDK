@@ -1,38 +1,43 @@
 # AmiScene SDK Roadmap
 
 ## M0 — Foundation
-- [x] Scope and A500/OCS/68000 baseline
+- [x] A500/OCS/68000 baseline
 - [x] Host/native/runtime architecture
-- [x] CLI skeleton
-- [x] Licensing policy
-- [x] Repository layout
+- [x] CLI skeleton and licensing policy
+- [x] ASM-first Scene Manifesto
+- [x] Assembly-oriented repository layout
 
 ## M1 — AmiTable + AmiBitplane
-Lookup-table generation and Amiga graphics conversion.
+- [x] Initial deterministic table core
+- [x] Initial chunky/indexed to planar core
+- [ ] Assembly-native output formats and labels
+- [ ] CLI integration
+- [ ] PNG/ILBM ingestion
+- [ ] palette and planar workflow qualification
 
 ## M2 — AmiCopper
-Copper authoring, validation, simulation and export.
+Copper authoring/validation and readable ASM generation. Raster-aware output, not a generic graphics abstraction.
 
 ## M3 — AmiBlit
-Blitter designer, minterms, masks and code/data export.
+Blitter minterms, masks, shifts, modulos, timing guidance and ASM-oriented code/data generation.
 
 ## M4 — AmiRaster + AmiCycle
-Raster and CPU timing/budget analysis.
+PAL raster budgets, 68000 timing analysis and DMA/contention-aware profiling.
 
-## M5 — Native tools
-Useful AmigaOS 2.04+ tools for hardware and emulators.
+## M5 — Native scene tools
+Focused AmigaOS 2.04+/68000 utilities useful on real machines and emulators.
 
-## M6 — Runtime SDK
-Small modular 68k C/ASM runtime components.
+## M6 — ASM runtime
+Small removable 68k routines: startup/takeover, Copper, Blitter, raster, interrupts, DMA, sprites, Paula, math, sync and depacking.
 
 ## M7 — Assets, audio and sync
-Packing, Paula-oriented conversion and timeline/event sync.
+Packing, Paula conversion and compact timeline/event data with ASM-first integration.
 
 ## M8 — Disk productions
-Bootblock, disk builder and clean-room trackloader workflows.
+Bootblock, disk builder and clean-room trackloader workflows, including size-focused production support.
 
-## M9 — Qualification
-End-to-end builds, emulator matrix and real-hardware qualification.
+## M9 — Qualification + reference effects
+Emulator matrix, real-hardware records and readable effects demonstrating the SDK without becoming a demo-maker.
 
 ## v1.0
-Stable formats, CLI and documented production workflow.
+Stable ASM interfaces/formats, documented timing/register contracts and a production-ready A500/OCS workflow.
