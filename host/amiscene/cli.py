@@ -5,7 +5,7 @@ from .table import sine,cosine,emit_asm
 from .image import build_png,emit_palette_asm,parse_palette
 from .ilbm import load_ilbm
 from .bitplane import emit_incbin
-from .copper import parse as parse_copper,validate as validate_copper,emit_asm as emit_copper_asm
+from .copper import parse as parse_copper,diagnose as diagnose_copper,emit_asm as emit_copper_asm
 def main():
  p=argparse.ArgumentParser(prog="amiscene",description="ASM-first Amiga demoscene toolkit");p.add_argument("--version",action="version",version="AmiScene SDK 0.1.0");sub=p.add_subparsers(dest="command")
  t=sub.add_parser("table");t.add_argument("kind",choices=("sine","cosine"));t.add_argument("--entries",type=int,default=256);t.add_argument("--amplitude",type=int,default=32767);t.add_argument("--label",default="table");t.add_argument("--directive",choices=("dc.b","dc.w","dc.l"),default="dc.w")
