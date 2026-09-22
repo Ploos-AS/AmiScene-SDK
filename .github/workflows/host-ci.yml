@@ -21,3 +21,23 @@ jobs:
       - run: amiscene copper examples/copper/bars.copper --check
       - run: amiscene copper examples/copper/bars.copper -o /tmp/bars.i --label CopperBars
       - run: grep -q '\$ffff,\$fffe' /tmp/bars.i
+
+  m68k-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build M2 reference with qualified amiga-dev
+        run: |
+          docker pull ghcr.io/ploos-as/amiga-dev:edge
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace/examples/asm \
+            ghcr.io/ploos-as/amiga-dev:edge \
+            amiga-build
+      - name: Inspect M2 artifact
+        run: |
+          test -s examples/asm/build/amiscene-copper
+          file examples/asm/build/amiscene-copper
