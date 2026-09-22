@@ -20,9 +20,10 @@ def main():
   if a.demo:commands=[("wait",(44,0)),("move",("COLOR00",0x003)),("wait",(100,0)),("move",("COLOR00",0x00f)),("end",())]
   elif a.input:commands=parse_copper(Path(a.input).read_text(encoding="utf-8"))
   else:raise ValueError("copper requires an input file or --demo")
-  issues=validate_copper(commands)
-  if issues:raise ValueError("\n".join(issues))
-  if a.check:print("OK: %d Copper commands"%len(commands));return 0
+  d=diagnose_copper(commands)
+  if d["errors"]:raise ValueError("\n".join(d["errors"]))
+  for warning in d["warnings"]:print("warning: "+warning)
+  if a.check:print("OK: %d Copper commands, %d warning(s)"%(len(commands),len(d["warnings"])));return 0
   asm=emit_copper_asm(commands,a.label)
   if a.output:Path(a.output).write_text(asm,encoding="utf-8")
   else:print(asm,end="")
