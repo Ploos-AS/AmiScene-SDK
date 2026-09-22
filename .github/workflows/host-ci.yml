@@ -33,6 +33,7 @@ jobs:
         run: |
           docker pull ghcr.io/ploos-as/amiga-dev:edge
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
             -v "$PWD:/workspace" \
             -w /workspace/examples/asm \
             ghcr.io/ploos-as/amiga-dev:edge \
