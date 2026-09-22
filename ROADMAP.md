@@ -10,10 +10,11 @@
 ## M1 — AmiTable + AmiBitplane
 - [x] Initial deterministic table core
 - [x] Initial chunky/indexed to planar core
-- [ ] Assembly-native output formats and labels
-- [ ] CLI integration
-- [ ] PNG/ILBM ingestion
+- [x] Assembly-native output formats and labels
+- [x] CLI integration
+- [x] PNG/ILBM ingestion
 - [ ] palette and planar workflow qualification
+- [x] ILBM read/write + ByteRun1 roundtrip tests
 
 ## M2 — AmiCopper
 Copper authoring/validation and readable ASM generation. Raster-aware output, not a generic graphics abstraction.
