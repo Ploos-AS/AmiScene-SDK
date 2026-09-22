@@ -13,8 +13,10 @@
 - [x] Assembly-native output formats and labels
 - [x] CLI integration
 - [x] PNG/ILBM ingestion
-- [ ] palette and planar workflow qualification
+- [x] Palette and planar workflow qualification
 - [x] ILBM read/write + ByteRun1 roundtrip tests
+
+**Status: feature-complete; CI/package qualification remains before tagging.**
 
 ## M2 — AmiCopper
 Copper authoring/validation and readable ASM generation. Raster-aware output, not a generic graphics abstraction.
