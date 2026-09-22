@@ -8,18 +8,23 @@
 - [x] Assembly-oriented repository layout
 
 ## M1 — AmiTable + AmiBitplane
-- [x] Initial deterministic table core
-- [x] Initial chunky/indexed to planar core
-- [x] Assembly-native output formats and labels
-- [x] CLI integration
-- [x] PNG/ILBM ingestion
-- [x] Palette and planar workflow qualification
-- [x] ILBM read/write + ByteRun1 roundtrip tests
+- [x] Deterministic table and planar cores
+- [x] Assembly-native output and CLI integration
+- [x] PNG/ILBM ingestion and palette workflow
+- [x] ILBM read/write + ByteRun1 tests
+- [x] Host CI/package qualification
 
-**Status: feature-complete; CI/package qualification remains before tagging.**
+**Status: host-qualified; v0.1.0 tag pending.**
 
 ## M2 — AmiCopper
-Copper authoring/validation and readable ASM generation. Raster-aware output, not a generic graphics abstraction.
+- [x] MOVE/WAIT/SKIP/END encoder
+- [x] .copper parser and readable ASM generation
+- [x] OCS register validation and scene-oriented diagnostics
+- [x] CLI source/check/output workflow
+- [x] Minimal 68000 Copper install/start/stop runtime
+- [x] DMA save/restore helpers
+- [x] A500/OCS reference source and qualification procedure
+- [ ] A500/OCS emulator runtime PASS
 
 ## M3 — AmiBlit
 Blitter minterms, masks, shifts, modulos, timing guidance and ASM-oriented code/data generation.
@@ -31,7 +36,7 @@ PAL raster budgets, 68000 timing analysis and DMA/contention-aware profiling.
 Focused AmigaOS 2.04+/68000 utilities useful on real machines and emulators.
 
 ## M6 — ASM runtime
-Small removable 68k routines: startup/takeover, Copper, Blitter, raster, interrupts, DMA, sprites, Paula, math, sync and depacking.
+Small removable 68k routines: startup/takeover, Copper, Blitter, bitplanes, sprites, raster waits, interrupts, DMA, Paula, math, sync and depacking.
 
 ## M7 — Assets, audio and sync
 Packing, Paula conversion and compact timeline/event data with ASM-first integration.
