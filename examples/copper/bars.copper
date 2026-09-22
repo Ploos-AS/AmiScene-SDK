@@ -1,0 +1,13 @@
+; AmiCopper OCS example
+; Hardware-close source: WAIT raster positions and MOVE custom registers.
+WAIT 44,0
+MOVE COLOR00,$003
+WAIT 80,0
+MOVE COLOR00,$006
+WAIT 120,0
+MOVE COLOR00,$00f
+WAIT 160,0
+MOVE COLOR00,$006
+WAIT 200,0
+MOVE COLOR00,$003
+END
