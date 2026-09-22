@@ -5,10 +5,11 @@ M2 runtime qualification uses the shared `Ploos-AS/amiga-runtime` infrastructure
 Canonical target:
 
 - profile: `amiga-ocs-68000-1m.conf`
+- free runtime: AROS m68k ROM/runtime
 - CPU: 68000
 - chipset: OCS
 - video: PAL
-- memory: 1 MiB class
+- memory: 512 KiB Chip + 512 KiB Fast (1 MiB class)
 - reference: `examples/asm/copper_minimal.s`
 
 ## Build
@@ -31,4 +32,4 @@ amiga-runtime test examples/asm/build/amiscene-copper --profile amiga-ocs-68000-
 
 ROM/Workbench material is supplied outside this repository. No proprietary Amiga files are committed.
 
-A runtime PASS must record actual emulator evidence. Merely building the binary or passing host CI is not an M2 runtime PASS.
+An AROS m68k runtime PASS must record actual emulator evidence. Merely building the binary or passing host CI is not an M2 runtime PASS. AROS qualification is the redistributable CI baseline and must not be reported as AmigaOS/Kickstart compatibility qualification; those remain separate qualification axes.
