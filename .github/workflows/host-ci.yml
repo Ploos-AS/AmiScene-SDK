@@ -46,3 +46,39 @@ jobs:
           name: amiscene-m2-hunk
           path: examples/asm/build/amiscene-copper-qualify
           if-no-files-found: error
+
+  m2-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m2-hunk
+          path: m2-hunk
+      - name: Pull qualified amiga-runtime
+        run: docker pull ghcr.io/ploos-as/amiga-runtime:edge
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/m2-runtime-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" ghcr.io/ploos-as/amiga-runtime:edge prepare-aros
+      - name: Execute M2 qualification Hunk
+        run: |
+          chmod +x m2-hunk/amiscene-copper-qualify || true
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros:ro" \
+            -v "$PWD/m2-hunk:/payload:ro" \
+            -v "$PWD/m2-runtime-evidence:/work/evidence" \
+            ghcr.io/ploos-as/amiga-runtime:edge \
+            test-hunk /payload/amiscene-copper-qualify --profile amiga-ocs-68000-1m
+          jq -e '.status == "PASS" and .runtime == "aros-hunk" and .profile == "amiga-ocs-68000-1m" and .guest_payload_executed == true' m2-runtime-evidence/result.json
+      - name: Upload M2 runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m2-runtime-evidence
+          path: m2-runtime-evidence/
+          if-no-files-found: warn
