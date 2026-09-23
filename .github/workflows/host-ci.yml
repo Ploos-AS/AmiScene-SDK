@@ -38,6 +38,5 @@ jobs:
             -w /workspace/examples/asm \
             ghcr.io/ploos-as/amiga-dev:edge \
             amiga-build
-      - name: Inspect M2 artifact
-        run: |
-          test -s examples/asm/build/amiscene-copper\n          test -s examples/asm/build/amiscene-copper-qualify\n          file examples/asm/build/amiscene-copper\n          file examples/asm/build/amiscene-copper-qualify
+      - name: Inspect M2 artifacts
+        run: test -s examples/asm/build/amiscene-copper && test -s examples/asm/build/amiscene-copper-qualify
