@@ -40,5 +40,4 @@ jobs:
             amiga-build
       - name: Inspect M2 artifact
         run: |
-          test -s examples/asm/build/amiscene-copper
-          file examples/asm/build/amiscene-copper
+          test -s examples/asm/build/amiscene-copper\n          test -s examples/asm/build/amiscene-copper-qualify\n          file examples/asm/build/amiscene-copper\n          file examples/asm/build/amiscene-copper-qualify
