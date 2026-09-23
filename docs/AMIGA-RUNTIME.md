@@ -27,9 +27,9 @@ The produced program is `examples/asm/build/amiscene-copper`.
 With `amiga-runtime` available:
 
 ```sh
-amiga-runtime test examples/asm/build/amiscene-copper --profile amiga-ocs-68000-1m --runtime fs-uae
+amiga-runtime test-hunk examples/asm/build/amiscene-copper --profile amiga-ocs-68000-1m
 ```
 
 ROM/Workbench material is supplied outside this repository. No proprietary Amiga files are committed.
 
-An AROS m68k runtime PASS must record actual emulator evidence. Merely building the binary or passing host CI is not an M2 runtime PASS. AROS qualification is the redistributable CI baseline and must not be reported as AmigaOS/Kickstart compatibility qualification; those remain separate qualification axes.
+The Hunk path boots the redistributable AROS m68k runtime and launches the native Amiga Hunk executable without requiring a `--version` application interface.\n\nAn AROS m68k runtime PASS must record actual emulator evidence. Merely building the binary or passing host CI is not an M2 runtime PASS. AROS qualification is the redistributable CI baseline and must not be reported as AmigaOS/Kickstart compatibility qualification; those remain separate qualification axes.
