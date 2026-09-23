@@ -33,3 +33,7 @@ amiga-runtime test-hunk examples/asm/build/amiscene-copper --profile amiga-ocs-6
 ROM/Workbench material is supplied outside this repository. No proprietary Amiga files are committed.
 
 The Hunk path boots the redistributable AROS m68k runtime and launches the native Amiga Hunk executable without requiring a `--version` application interface.\n\nAn AROS m68k runtime PASS must record actual emulator evidence. Merely building the binary or passing host CI is not an M2 runtime PASS. AROS qualification is the redistributable CI baseline and must not be reported as AmigaOS/Kickstart compatibility qualification; those remain separate qualification axes.
+
+## A500 OCS qualification memory baseline
+
+The `amiga-ocs-68000-1m` runtime profile uses 1 MiB Chip RAM and no Fast RAM. This keeps the M2 Copper qualification payload and its Copper list DMA-visible without relying on Fast RAM placement. This is a qualification constraint, not a substitute for explicit Chip-memory sections in general-purpose executables.
