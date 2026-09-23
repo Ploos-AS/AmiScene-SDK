@@ -33,15 +33,15 @@ SavedDma:
 
         cnop    0,4
 CopperBars:
-        dc.w    $2c01,$7ffe
+        dc.w    $2c01,$fffe
         dc.w    $0180,$0003
-        dc.w    $5001,$7ffe
+        dc.w    $5001,$fffe
         dc.w    $0180,$0006
-        dc.w    $7801,$7ffe
+        dc.w    $7801,$fffe
         dc.w    $0180,$000f
-        dc.w    $a001,$7ffe
+        dc.w    $a001,$fffe
         dc.w    $0180,$0006
-        dc.w    $c801,$7ffe
+        dc.w    $c801,$fffe
         dc.w    $0180,$0003
         dc.w    $ffff,$fffe
 CopperBars_end:
