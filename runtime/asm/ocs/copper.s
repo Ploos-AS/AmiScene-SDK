@@ -1,3 +1,5 @@
+        xdef    AmiCopperInstall,AmiCopperStart,AmiCopperStop,AmiDmaSave,AmiDmaRestore
+
 ; AmiScene OCS/68000 Copper runtime
 ; Small independent routines; no OS dependency.
         include "amiscene/ocs.i"
