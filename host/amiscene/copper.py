@@ -14,12 +14,12 @@ def register(value):
  if value<0x080 or value>0x1fe or value&1:raise ValueError("Copper MOVE register must be even $080..$1fe")
  return value
 def move(reg,value):return register(reg),int(value)&0xffff
-def wait(v,h=0,vmask=0xff,hmask=0xfe):
+def wait(v,h=0,vmask=0x7f,hmask=0xfe,bfd=True):
  if not 0<=v<=255 or not 0<=h<=254:raise ValueError("WAIT position out of range")
  if h&1:raise ValueError("Copper horizontal position must be even")
- if not 0<=vmask<=255 or not 0<=hmask<=254 or hmask&1:raise ValueError("WAIT mask out of range")
- return (v<<8)|h|1,((vmask&0x7f)<<8)|(hmask&0xfe)
-def skip(v,h=0,vmask=0xff,hmask=0xfe):a,b=wait(v,h,vmask,hmask);return a,b|1
+ if not 0<=vmask<=0x7f or not 0<=hmask<=254 or hmask&1:raise ValueError("WAIT mask out of range")
+ return (v<<8)|h|1,(0x8000 if bfd else 0)|((vmask&0x7f)<<8)|(hmask&0xfe)
+def skip(v,h=0,vmask=0x7f,hmask=0xfe,bfd=True):a,b=wait(v,h,vmask,hmask,bfd);return a,b|1
 def end():return 0xffff,0xfffe
 def parse(text):
  commands=[]
@@ -42,7 +42,7 @@ def diagnose(commands):
     wait(*args);v=args[0];h=args[1] if len(args)>1 else 0;pos=(v,h)
     if kind=="wait" and last is not None and pos<last:errors.append("command %d: WAIT moves backwards in raster order"%i)
     if kind=="wait":last=pos
-    if len(args)>2 and args[2]!=0xff:warnings.append("command %d: vertical WAIT mask is non-default; verify intentional masked compare"%i)
+    if len(args)>2 and args[2]!=0x7f:warnings.append("command %d: vertical WAIT mask is non-default; verify intentional masked compare"%i)
     if len(args)>3 and args[3]!=0xfe:warnings.append("command %d: horizontal WAIT mask is non-default; verify intentional masked compare"%i)
    elif kind=="move":
     register(args[0]);name=str(args[0]).upper()
