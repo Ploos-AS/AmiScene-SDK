@@ -8,6 +8,6 @@ class CopperSourceTests(unittest.TestCase):
  def test_backwards_wait(self):self.assertTrue(validate(parse("WAIT 100,0\nWAIT 50,0\nEND")))
  def test_source_to_asm(self):self.assertIn("$0180,$000f",emit_asm(parse("WAIT 44 0\nMOVE COLOR00 $00f\nEND"),"Copper"))
  def test_dangerous_write_warning(self):self.assertTrue(diagnose(parse("MOVE DMACON,$8000\nEND"))["warnings"])
- def test_mask_warning(self):self.assertTrue(diagnose(parse("WAIT 44,0,$7f,$fe\nEND"))["warnings"])
+ def test_mask_warning(self):self.assertTrue(diagnose(parse("WAIT 44,0,$3f,$fe\nEND"))["warnings"])
  def test_after_end(self):self.assertTrue(diagnose([("end",()),("move",("COLOR00",0))])["errors"])
 if __name__=="__main__":unittest.main()
