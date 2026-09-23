@@ -40,3 +40,9 @@ jobs:
             amiga-build
       - name: Inspect M2 artifacts
         run: test -s examples/asm/build/amiscene-copper && test -s examples/asm/build/amiscene-copper-qualify
+      - name: Upload M2 qualification Hunk
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m2-hunk
+          path: examples/asm/build/amiscene-copper-qualify
+          if-no-files-found: error
