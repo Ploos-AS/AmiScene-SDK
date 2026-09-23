@@ -4,15 +4,15 @@ VASM ?= vasmm68k_mot
 VLINK ?= vlink
 VASMFLAGS ?= -m68000 -Fhunk -I../../include
 VLINKFLAGS ?= -bamigahunk -Bstatic
-OUT ?= build/amiscene-copper
+OUT ?= build/amiscene-copper\nQUALIFY_OUT ?= build/amiscene-copper-qualify
 
-all: $(OUT)
+all: $(OUT) $(QUALIFY_OUT)
 
 build/copper_minimal.o: copper_minimal.s ../../include/amiscene/ocs.i
 	mkdir -p build
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
-build/copper_runtime.o: ../../runtime/asm/ocs/copper.s ../../include/amiscene/ocs.i
+build/copper_qualify.o: copper_qualify.s ../../include/amiscene/ocs.i\n\tmkdir -p build\n\t$(VASM) $(VASMFLAGS) -o $@ $<\n\nbuild/copper_runtime.o: ../../runtime/asm/ocs/copper.s ../../include/amiscene/ocs.i
 	mkdir -p build
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
