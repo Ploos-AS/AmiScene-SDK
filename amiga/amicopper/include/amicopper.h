@@ -15,5 +15,7 @@ struct AmiCopperDocument {
 void AmiCopperDocumentInit(struct AmiCopperDocument *doc);
 void AmiCopperDocumentMarkDirty(struct AmiCopperDocument *doc);
 void AmiCopperDocumentValidated(struct AmiCopperDocument *doc, int valid);
+int AmiCopperDocumentInsert(struct AmiCopperDocument *doc, unsigned short w0, unsigned short w1);
+int AmiCopperDocumentDelete(struct AmiCopperDocument *doc);
 
 #endif
