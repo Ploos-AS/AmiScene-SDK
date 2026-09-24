@@ -56,6 +56,11 @@ void AmiCopperUIRun(struct AmiCopperUI *ui)
             if (cls == IDCMP_RAWKEY && code == 0x4c && ui->document->selected) ui->document->selected--;
             if (cls == IDCMP_RAWKEY && code == 0x4d && ui->document->selected + 1 < ui->document->instruction_count) ui->document->selected++;
             if (cls == IDCMP_RAWKEY && (code == 0x4c || code == 0x4d)) { AmiCopperDecode(ui->document->words[ui->document->selected][0],ui->document->words[ui->document->selected][1],&ui->selected); draw_shell(w,ui); }
+            if (cls == IDCMP_RAWKEY && code == 0x37) AmiCopperDocumentInsert(ui->document,0x0180,0x0000); /* M */
+            if (cls == IDCMP_RAWKEY && code == 0x11) AmiCopperDocumentInsert(ui->document,0x2c01,0xfffe); /* W */
+            if (cls == IDCMP_RAWKEY && code == 0x21) AmiCopperDocumentInsert(ui->document,0x2c01,0xffff); /* S */
+            if (cls == IDCMP_RAWKEY && code == 0x46) AmiCopperDocumentDelete(ui->document); /* Del */
+            if (cls == IDCMP_RAWKEY && (code == 0x37 || code == 0x11 || code == 0x21 || code == 0x46)) { if(ui->document->instruction_count) AmiCopperDecode(ui->document->words[ui->document->selected][0],ui->document->words[ui->document->selected][1],&ui->selected); draw_shell(w,ui); }
             /* ESC is an intentional keyboard-first M0 exit path. */
             if (cls == IDCMP_RAWKEY && code == 0x45)
                 ui->running = 0;
