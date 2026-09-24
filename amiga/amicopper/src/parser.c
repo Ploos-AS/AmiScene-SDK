@@ -4,7 +4,17 @@
 #include "amicopper.h"
 
 static int num(const char *s, unsigned long *v){ char *e; int base=10; if(*s=='$'){s++;base=16;} *v=strtoul(s,&e,base); return e!=s && *e==0; }
-static int reg(const char *s,unsigned long *v){ int n; if(!strncmp(s,"COLOR",5)){ n=atoi(s+5); if(n>=0&&n<32){*v=0x180+n*2;return 1;} } return num(s,v)&&*v>=0x80&&*v<=0x1fe&&!(*v&1); }
+struct RegName { const char *name; unsigned short offset; };
+static const struct RegName regs[]={
+ {"DIWSTRT",0x08e},{"DIWSTOP",0x090},{"DDFSTRT",0x092},{"DDFSTOP",0x094},{"DMACON",0x096},{"INTENA",0x09a},{"INTREQ",0x09c},{"ADKCON",0x09e},
+ {"BPLCON0",0x100},{"BPLCON1",0x102},{"BPLCON2",0x104},{"BPL1MOD",0x108},{"BPL2MOD",0x10a}
+};
+static int reg(const char *s,unsigned long *v){ int n,i; char u[24]; size_t j; for(j=0;j<sizeof(u)-1&&s[j];j++)u[j]=(char)toupper((unsigned char)s[j]);u[j]=0;
+ for(i=0;i<(int)(sizeof(regs)/sizeof(regs[0]));i++)if(!strcmp(u,regs[i].name)){*v=regs[i].offset;return 1;}
+ if(!strncmp(u,"COLOR",5)){n=atoi(u+5);if(n>=0&&n<32){*v=0x180+n*2;return 1;}}
+ if(!strncmp(u,"BPL",3)&&u[3]>='1'&&u[3]<='6'&&(!strcmp(u+4,"PTH")||!strcmp(u+4,"PTL"))){n=u[3]-'1';*v=0x0e0+n*4+(!strcmp(u+4,"PTL")?2:0);return 1;}
+ if(!strncmp(u,"SPR",3)&&u[3]>='0'&&u[3]<='7'){n=u[3]-'0';if(!strcmp(u+4,"PTH")||!strcmp(u+4,"PTL")){*v=0x120+n*4+(!strcmp(u+4,"PTL")?2:0);return 1;}if(!strcmp(u+4,"POS")||!strcmp(u+4,"CTL")){*v=0x140+n*8+(!strcmp(u+4,"CTL")?2:0);return 1;}}
+ return num(s,v)&&*v>=0x80&&*v<=0x1fe&&!(*v&1); }
 int AmiCopperParseLine(const char *line,unsigned short *w0,unsigned short *w1)
 {
  char b[96],*op,*a,*c; unsigned long x,y; size_t i;
