@@ -5,7 +5,7 @@ void AmiCopperDocumentInit(struct AmiCopperDocument *doc)
     doc->path = 0;
     doc->instruction_count = 0;
     doc->dirty = 0;
-    doc->valid = 0;
+    doc->valid = 0;\n    doc->selected = 0;
 }
 
 void AmiCopperDocumentMarkDirty(struct AmiCopperDocument *doc)
