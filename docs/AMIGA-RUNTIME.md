@@ -37,3 +37,5 @@ The Hunk path boots the redistributable AROS m68k runtime and launches the nativ
 ## A500 OCS qualification memory baseline
 
 The `amiga-ocs-68000-1m` runtime profile uses 1 MiB Chip RAM and no Fast RAM. This keeps the M2 Copper qualification payload and its Copper list DMA-visible without relying on Fast RAM placement. This is a qualification constraint, not a substitute for explicit Chip-memory sections in general-purpose executables.
+
+Runtime integration revision: amiga-runtime `d7a4db88` or newer is required for M2 Hunk qualification because the runner injects through the discovered AROS Startup-Sequence.
