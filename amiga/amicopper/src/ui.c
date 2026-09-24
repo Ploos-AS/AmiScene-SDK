@@ -51,8 +51,11 @@ void AmiCopperUIRun(struct AmiCopperUI *ui)
             ULONG cls = msg->Class;
             UWORD code = msg->Code;
             ReplyMsg((struct Message *)msg);
-            if (cls == IDCMP_REFRESHWINDOW) {\n                BeginRefresh(w);\n                draw_shell(w, &ui->selected);\n                EndRefresh(w, TRUE);\n            }\n            if (cls == IDCMP_CLOSEWINDOW)
+            if (cls == IDCMP_REFRESHWINDOW) {\n                BeginRefresh(w);\n                draw_shell(w, ui);\n                EndRefresh(w, TRUE);\n            }\n            if (cls == IDCMP_CLOSEWINDOW)
                 ui->running = 0;
+            if (cls == IDCMP_RAWKEY && code == 0x4c && ui->document->selected) ui->document->selected--;
+            if (cls == IDCMP_RAWKEY && code == 0x4d && ui->document->selected + 1 < ui->document->instruction_count) ui->document->selected++;
+            if (cls == IDCMP_RAWKEY && (code == 0x4c || code == 0x4d)) { AmiCopperDecode(ui->document->words[ui->document->selected][0],ui->document->words[ui->document->selected][1],&ui->selected); draw_shell(w,ui); }
             /* ESC is an intentional keyboard-first M0 exit path. */
             if (cls == IDCMP_RAWKEY && code == 0x45)
                 ui->running = 0;
