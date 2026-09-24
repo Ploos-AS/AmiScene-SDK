@@ -66,3 +66,20 @@ bad:
 bad_end:
     if(bad_index)*bad_index=doc->instruction_count; AmiCopperDocumentValidated(doc,0); return 0;
 }
+
+int AmiCopperDocumentInsertSource(struct AmiCopperDocument *doc, const char *line)
+{
+    unsigned short w0,w1;
+    if(!AmiCopperParseLine(line,&w0,&w1)) return 0;
+    return AmiCopperDocumentInsert(doc,w0,w1);
+}
+
+int AmiCopperDocumentReplaceSource(struct AmiCopperDocument *doc, const char *line)
+{
+    unsigned short w0,w1;
+    if(!doc->instruction_count || !AmiCopperParseLine(line,&w0,&w1)) return 0;
+    doc->words[doc->selected][0]=w0;
+    doc->words[doc->selected][1]=w1;
+    AmiCopperDocumentMarkDirty(doc);
+    return 1;
+}
