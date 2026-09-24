@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include "amicopper.h"
+#include "amicopper_ui.h"
 
 int main(void)
 {
     struct AmiCopperDocument doc;
+    struct AmiCopperUI ui;
     AmiCopperDocumentInit(&doc);
 
-    puts(AMICOPPER_NAME " native M0");
-    puts("ARexx port contract: " AMICOPPER_AREXX_PORT);
-    puts("GUI/ARexx implementation follows; runtime remains OS-independent.");
-    return doc.dirty;
+    if (!AmiCopperUIOpen(&ui)) {
+        fputs("AmiCopper: unable to open Intuition window\n", stderr);
+        return 20;
+    }
+
+    AmiCopperUIRun(&ui);
+    AmiCopperUIClose(&ui);
+    return 0;
 }
