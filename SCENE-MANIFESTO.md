@@ -52,3 +52,13 @@ AmiScene is not a click-to-make-a-demo product. Generators, converters, profiler
 ## Earn trust through useful code
 
 The project should favor small excellent routines, accurate documentation, reproducible results and real productions over broad feature counts.
+
+## Useful tools can have good interfaces
+
+Scene credibility does not require hostile tools. AmiScene should be genuinely useful for making demos: fast, clear native Amiga interfaces where a GUI helps, keyboard-driven workflows for coders, good previews and diagnostics, and automation that never hides the hardware model.
+
+Native Amiga tools should expose documented ARexx ports where useful. ARexx belongs to the tooling and workflow layer, not the target demo runtime. Scripts must be able to drive repeatable asset/build/export workflows without making generated code or runtime effects depend on AmigaOS.
+
+The GUI must complement, not replace, source and CLI workflows. Important operations remain inspectable and reproducible; generated assembly remains readable; hardware registers, DMA, memory placement, raster timing, cycles and bytes stay visible to the coder.
+
+AmiScene is not a click-to-make-demo package. It is a serious demoscene SDK that removes tedious work while leaving creative and technical control with the coder.
