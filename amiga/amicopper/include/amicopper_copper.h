@@ -11,5 +11,6 @@ struct AmiCopperInstruction {
 
 const char *AmiCopperOpcodeName(enum AmiCopperOpcode opcode);
 int AmiCopperDecode(unsigned short word0, unsigned short word1, struct AmiCopperInstruction *out);
+int AmiCopperFormatSource(const struct AmiCopperInstruction *ins, char *buf, unsigned int size);
 
 #endif
