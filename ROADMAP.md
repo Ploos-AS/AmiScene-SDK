@@ -50,3 +50,16 @@ Emulator matrix, real-hardware records and readable effects demonstrating the SD
 
 ## v1.0
 Stable ASM interfaces/formats, documented timing/register contracts and a production-ready A500/OCS workflow.
+
+## Native Amiga UX and ARexx
+
+AmiScene's native tools should be productive scene tools, not framework-heavy applications.
+
+- [ ] Define a common native-tool UI model: keyboard-first, fast GUI, previews, diagnostics, no hidden hardware state.
+- [ ] Define a stable ARexx port convention for relevant tools (`AMICOPPER`, `AMIBLIT`, `AMIBITPLANE`, `AMIPALETTE`, etc.).
+- [ ] Define common ARexx verbs and return conventions: `OPEN`, `SAVE`, `EXPORT`, `BUILD`, `GET`, `SET`, `STATUS`, `QUIT`.
+- [ ] Make query/state operations scriptable, not only actions.
+- [ ] Keep ARexx strictly in the native tooling/workflow layer; target runtime remains OS-independent.
+- [ ] Ship useful ARexx workflow examples for repeatable asset conversion, export and build loops.
+- [ ] Keep GUI, CLI and source workflows interoperable and reproducible.
+- [ ] Start native UI work with AmiCopper as the reference implementation.
