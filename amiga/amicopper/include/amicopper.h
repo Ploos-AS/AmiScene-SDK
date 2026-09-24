@@ -18,5 +18,6 @@ void AmiCopperDocumentValidated(struct AmiCopperDocument *doc, int valid);
 int AmiCopperDocumentInsert(struct AmiCopperDocument *doc, unsigned short w0, unsigned short w1);
 int AmiCopperDocumentDelete(struct AmiCopperDocument *doc);
 int AmiCopperDocumentValidate(struct AmiCopperDocument *doc, unsigned long *bad_index);
+int AmiCopperParseLine(const char *line, unsigned short *w0, unsigned short *w1);
 
 #endif
