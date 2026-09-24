@@ -19,5 +19,7 @@ int AmiCopperDocumentInsert(struct AmiCopperDocument *doc, unsigned short w0, un
 int AmiCopperDocumentDelete(struct AmiCopperDocument *doc);
 int AmiCopperDocumentValidate(struct AmiCopperDocument *doc, unsigned long *bad_index);
 int AmiCopperParseLine(const char *line, unsigned short *w0, unsigned short *w1);
+int AmiCopperDocumentInsertSource(struct AmiCopperDocument *doc, const char *line);
+int AmiCopperDocumentReplaceSource(struct AmiCopperDocument *doc, const char *line);
 
 #endif
