@@ -61,6 +61,7 @@ void AmiCopperUIRun(struct AmiCopperUI *ui)
             if (cls == IDCMP_RAWKEY && code == 0x21) AmiCopperDocumentInsert(ui->document,0x2c01,0xffff); /* S */
             if (cls == IDCMP_RAWKEY && code == 0x46) AmiCopperDocumentDelete(ui->document); /* Del */
             if (cls == IDCMP_RAWKEY && (code == 0x37 || code == 0x11 || code == 0x21 || code == 0x46)) { if(ui->document->instruction_count) AmiCopperDecode(ui->document->words[ui->document->selected][0],ui->document->words[ui->document->selected][1],&ui->selected); draw_shell(w,ui); }
+            if (cls == IDCMP_RAWKEY && code == 0x50) { unsigned long bad=0; if(!AmiCopperDocumentValidate(ui->document,&bad) && bad<ui->document->instruction_count) ui->document->selected=bad; if(ui->document->instruction_count) AmiCopperDecode(ui->document->words[ui->document->selected][0],ui->document->words[ui->document->selected][1],&ui->selected); draw_shell(w,ui); } /* F5 */
             /* ESC is an intentional keyboard-first M0 exit path. */
             if (cls == IDCMP_RAWKEY && code == 0x45)
                 ui->running = 0;
