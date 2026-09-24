@@ -35,3 +35,18 @@ int AmiCopperDocumentDelete(struct AmiCopperDocument *doc)
     for (i=doc->selected; i+1<doc->instruction_count; ++i) { doc->words[i][0]=doc->words[i+1][0]; doc->words[i][1]=doc->words[i+1][1]; }
     doc->instruction_count--; if (doc->selected && doc->selected>=doc->instruction_count) doc->selected--; AmiCopperDocumentMarkDirty(doc); return 1;
 }
+
+int AmiCopperDocumentValidate(struct AmiCopperDocument *doc, unsigned long *bad_index)
+{
+    unsigned long i;
+    int ended=0;
+    for(i=0;i<doc->instruction_count;i++) {
+        unsigned short a=doc->words[i][0], b=doc->words[i][1];
+        if(ended) { if(bad_index)*bad_index=i; AmiCopperDocumentValidated(doc,0); return 0; }
+        if(a==0xffff && b==0xfffe) { ended=1; continue; }
+        if(!(a&1)) { if(a&1) { if(bad_index)*bad_index=i; AmiCopperDocumentValidated(doc,0); return 0; } }
+        else if((a&0x00fe)&1) { if(bad_index)*bad_index=i; AmiCopperDocumentValidated(doc,0); return 0; }
+    }
+    if(!ended) { if(bad_index)*bad_index=doc->instruction_count; AmiCopperDocumentValidated(doc,0); return 0; }
+    AmiCopperDocumentValidated(doc,1); return 1;
+}
