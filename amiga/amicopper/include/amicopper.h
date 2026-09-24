@@ -1,0 +1,19 @@
+#ifndef AMISCENE_AMICOPPER_H
+#define AMISCENE_AMICOPPER_H
+
+#define AMICOPPER_NAME "AmiCopper"
+#define AMICOPPER_AREXX_PORT "AMICOPPER"
+#define AMICOPPER_API_VERSION 1
+
+struct AmiCopperDocument {
+    const char *path;
+    unsigned long instruction_count;
+    int dirty;
+    int valid;
+};
+
+void AmiCopperDocumentInit(struct AmiCopperDocument *doc);
+void AmiCopperDocumentMarkDirty(struct AmiCopperDocument *doc);
+void AmiCopperDocumentValidated(struct AmiCopperDocument *doc, int valid);
+
+#endif
