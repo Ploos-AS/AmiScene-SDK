@@ -21,5 +21,7 @@ int AmiCopperDocumentValidate(struct AmiCopperDocument *doc, unsigned long *bad_
 int AmiCopperParseLine(const char *line, unsigned short *w0, unsigned short *w1);
 int AmiCopperDocumentInsertSource(struct AmiCopperDocument *doc, const char *line);
 int AmiCopperDocumentReplaceSource(struct AmiCopperDocument *doc, const char *line);
+int AmiCopperDocumentLoad(struct AmiCopperDocument *doc, const char *path);
+int AmiCopperDocumentSave(struct AmiCopperDocument *doc, const char *path);
 
 #endif
