@@ -2,9 +2,11 @@
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <devices/inputevent.h>
+#include <libraries/gadtools.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/keymap.h>
+#include <proto/gadtools.h>
 #include <stdio.h>
 #include <string.h>
 #include "amicopper_ui.h"
