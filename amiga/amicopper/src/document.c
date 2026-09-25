@@ -51,8 +51,7 @@ int AmiCopperDocumentValidate(struct AmiCopperDocument *doc, unsigned long *bad_
             if(a < 0x0080 || a > 0x01fe) goto bad;
         } else {
             unsigned short v=(a>>8)&0xff, h=a&0xfe;
-            /* WAIT/SKIP: IR1 bit 0 is set; horizontal compare is encoded on even bits. */
-            if(a & 0x0002) goto bad;
+            /* WAIT/SKIP: IR1 bit 0 is set; bits 7..1 encode horizontal position. */
             /* IR2 bit 0 selects SKIP. Horizontal mask occupies bits 1..7. */
             if(!(b&1)) {
                 if(have_wait && (v<last_v || (v==last_v && h<last_h))) goto bad;
