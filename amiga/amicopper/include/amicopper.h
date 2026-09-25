@@ -25,5 +25,9 @@ int AmiCopperDocumentReplaceSource(struct AmiCopperDocument *doc, const char *li
 int AmiCopperDocumentLoad(struct AmiCopperDocument *doc, const char *path);
 int AmiCopperDocumentSave(struct AmiCopperDocument *doc, const char *path);
 int AmiCopperRexxCommand(struct AmiCopperDocument *doc, const char *command, char *result, unsigned int result_size, int *quit);
+struct MsgPort;
+struct MsgPort *AmiCopperRexxOpen(void);
+void AmiCopperRexxClose(struct MsgPort *port);
+void AmiCopperRexxDrain(struct MsgPort *port, struct AmiCopperDocument *doc, int *quit);
 
 #endif
