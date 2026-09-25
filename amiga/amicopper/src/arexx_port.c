@@ -7,15 +7,15 @@
 #include <string.h>
 #include "amicopper.h"
 
-struct Library *RexxSysBase = 0;
+struct RexxSysBase *RexxSysBase = 0;
 
 struct MsgPort *AmiCopperRexxOpen(void)
 {
  struct MsgPort *p;
  if(!SysBase || SysBase->LibNode.lib_Version < 36)return 0;
- if(!RexxSysBase){RexxSysBase=OpenLibrary("rexxsyslib.library",0);if(!RexxSysBase)return 0;}
+ if(!RexxSysBase){RexxSysBase=(struct RexxSysBase *)OpenLibrary("rexxsyslib.library",0);if(!RexxSysBase)return 0;}
  Forbid();
- if(FindPort((STRPTR)AMICOPPER_AREXX_PORT)){Permit();CloseLibrary(RexxSysBase);RexxSysBase=0;return 0;}
+ if(FindPort((STRPTR)AMICOPPER_AREXX_PORT)){Permit();CloseLibrary((struct Library *)RexxSysBase);RexxSysBase=0;return 0;}
  p=CreateMsgPort();
  if(!p){Permit();CloseLibrary(RexxSysBase);RexxSysBase=0;return 0;}
  p->mp_Node.ln_Name=(char *)AMICOPPER_AREXX_PORT; p->mp_Node.ln_Pri=0; AddPort(p);
