@@ -47,6 +47,13 @@ jobs:
           path: examples/asm/build/amiscene-copper-qualify
           if-no-files-found: error
 
+  amicopper-source-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test AmiCopper parser and formatter round trips
+        run: make -C amiga/amicopper test
+
   amicopper-native-build:
     runs-on: ubuntu-latest
     permissions:
