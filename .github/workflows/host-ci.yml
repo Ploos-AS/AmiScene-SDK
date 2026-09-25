@@ -47,6 +47,25 @@ jobs:
           path: examples/asm/build/amiscene-copper-qualify
           if-no-files-found: error
 
+  amicopper-native-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build native AmiCopper with amiga-dev
+        run: |
+          docker pull ghcr.io/ploos-as/amiga-dev:edge
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/workspace" -w /workspace/amiga/amicopper ghcr.io/ploos-as/amiga-dev:edge make
+      - name: Inspect native artifact
+        run: test -s amiga/amicopper/build/AmiCopper
+      - uses: actions/upload-artifact@v4
+        with:
+          name: amicopper-native-hunk
+          path: amiga/amicopper/build/AmiCopper
+          if-no-files-found: error
+
   m2-runtime:
     needs: m68k-build
     runs-on: ubuntu-latest
