@@ -17,12 +17,12 @@ static int reg(const char *s,unsigned long *v){ int n,i; char u[24]; size_t j; f
  return num(s,v)&&*v>=0x80&&*v<=0x1fe&&!(*v&1); }
 int AmiCopperParseLine(const char *line,unsigned short *w0,unsigned short *w1)
 {
- char b[96],*op,*a,*c; unsigned long x,y; size_t i;
+ char b[96],*op,*a,*c,*d,*e,*f; unsigned long x,y,vm,hm,bfd; size_t i;
  for(i=0;i<sizeof(b)-1&&line[i]&&line[i]!=';';i++) b[i]=(line[i]==',')?' ':line[i]; b[i]=0;
  op=strtok(b," \t\r\n"); if(!op)return 0; for(i=0;op[i];i++)op[i]=(char)toupper((unsigned char)op[i]);
  if(!strcmp(op,"END")){*w0=0xffff;*w1=0xfffe;return strtok(0," \t\r\n")==0;}
  a=strtok(0," \t\r\n"); c=strtok(0," \t\r\n"); if(!a||!c)return 0;
  if(!strcmp(op,"MOVE")){ if(!reg(a,&x)||!num(c,&y)||strtok(0," \t\r\n"))return 0; *w0=(unsigned short)x;*w1=(unsigned short)y;return 1; }
- if(!strcmp(op,"WAIT")||!strcmp(op,"SKIP")){ if(!num(a,&x)||!num(c,&y)||x>255||y>254||(y&1))return 0; *w0=(unsigned short)((x<<8)|y|1);*w1=(unsigned short)(0xfffe|(!strcmp(op,"SKIP")?1:0));return 1; }
+ if(!strcmp(op,"WAIT")||!strcmp(op,"SKIP")){ d=strtok(0," \t\r\n"); e=strtok(0," \t\r\n"); f=strtok(0," \t\r\n"); if(strtok(0," \t\r\n"))return 0; vm=0x7f;hm=0xfe;bfd=1; if(!num(a,&x)||!num(c,&y)||x>255||y>254||(y&1))return 0; if(d&&(!num(d,&vm)||vm>0x7f))return 0; if(e&&(!num(e,&hm)||hm>0xfe||(hm&1)))return 0; if(f&&(!num(f,&bfd)||bfd>1))return 0; *w0=(unsigned short)((x<<8)|y|1);*w1=(unsigned short)((bfd?0x8000:0)|(vm<<8)|hm|(!strcmp(op,"SKIP")?1:0));return 1; }
  return 0;
 }
