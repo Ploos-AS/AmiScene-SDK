@@ -1,4 +1,5 @@
-#include "amicopper_copper.h"\n#include <stdio.h>
+#include "amicopper_copper.h"
+#include <stdio.h>
 
 const char *AmiCopperOpcodeName(enum AmiCopperOpcode opcode)
 {
@@ -24,12 +25,12 @@ int AmiCopperDecode(unsigned short w0, unsigned short w1, struct AmiCopperInstru
 
 int AmiCopperFormatSource(const struct AmiCopperInstruction *ins, char *buf, unsigned int size)
 {
-    unsigned int v,h;
+    unsigned int v,h,vm,hm,bfd;
     if(!ins||!buf||!size)return 0;
     switch(ins->opcode){
     case AMICOPPER_MOVE: snprintf(buf,size,"MOVE $%03x,$%04x",ins->word0,ins->word1); break;
-    case AMICOPPER_WAIT: v=ins->word0>>8; h=ins->word0&0xfe; snprintf(buf,size,"WAIT %u,%u",v,h); break;
-    case AMICOPPER_SKIP: v=ins->word0>>8; h=ins->word0&0xfe; snprintf(buf,size,"SKIP %u,%u",v,h); break;
+    case AMICOPPER_WAIT: v=ins->word0>>8; h=ins->word0&0xfe; vm=(ins->word1>>8)&0x7f; hm=ins->word1&0xfe; bfd=(ins->word1>>15)&1; snprintf(buf,size,"WAIT %u,%u,%u,%u,%u",v,h,vm,hm,bfd); break;
+    case AMICOPPER_SKIP: v=ins->word0>>8; h=ins->word0&0xfe; vm=(ins->word1>>8)&0x7f; hm=ins->word1&0xfe; bfd=(ins->word1>>15)&1; snprintf(buf,size,"SKIP %u,%u,%u,%u,%u",v,h,vm,hm,bfd); break;
     case AMICOPPER_END: snprintf(buf,size,"END"); break;
     default:return 0;
     }
