@@ -2,7 +2,7 @@
 
 void AmiCopperDocumentInit(struct AmiCopperDocument *doc)
 {
-    doc->path = 0;
+    doc->path[0] = 0;
     doc->instruction_count = 0;
     doc->dirty = 0;
     doc->valid = 0;
