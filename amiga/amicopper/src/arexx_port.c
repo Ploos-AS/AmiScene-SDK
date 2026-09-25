@@ -13,7 +13,7 @@ struct MsgPort *AmiCopperRexxOpen(void)
 {
  struct MsgPort *p;
  if(!SysBase || SysBase->LibNode.lib_Version < 36)return 0;
- if(!RexxSysBase{RexxSysBase=OpenLibrary("rexxsyslib.library",0);if(!RexxSysBase)return 0;}
+ if(!RexxSysBase){RexxSysBase=OpenLibrary("rexxsyslib.library",0);if(!RexxSysBase)return 0;}
  Forbid();
  if(FindPort((STRPTR)AMICOPPER_AREXX_PORT)){Permit();CloseLibrary(RexxSysBase);RexxSysBase=0;return 0;}
  p=CreateMsgPort();
