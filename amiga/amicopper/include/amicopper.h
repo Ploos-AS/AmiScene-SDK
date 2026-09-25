@@ -4,6 +4,7 @@
 #define AMICOPPER_NAME "AmiCopper"
 #define AMICOPPER_AREXX_PORT "AMICOPPER"
 #define AMICOPPER_API_VERSION 1\n#define AMICOPPER_MAX_INSTRUCTIONS 256
+#define AMICOPPER_AREXX_RESULT_MAX 160
 
 struct AmiCopperDocument {
     const char *path;
@@ -23,5 +24,6 @@ int AmiCopperDocumentInsertSource(struct AmiCopperDocument *doc, const char *lin
 int AmiCopperDocumentReplaceSource(struct AmiCopperDocument *doc, const char *line);
 int AmiCopperDocumentLoad(struct AmiCopperDocument *doc, const char *path);
 int AmiCopperDocumentSave(struct AmiCopperDocument *doc, const char *path);
+int AmiCopperRexxCommand(struct AmiCopperDocument *doc, const char *command, char *result, unsigned int result_size, int *quit);
 
 #endif
