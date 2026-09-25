@@ -8,7 +8,14 @@
 
 struct MsgPort *AmiCopperRexxOpen(void)
 {
- struct MsgPort *p=CreateMsgPort(); if(!p)return 0; p->mp_Node.ln_Name=(char *)AMICOPPER_AREXX_PORT; p->mp_Node.ln_Pri=0; AddPort(p); return p;
+ struct MsgPort *p;
+ Forbid();
+ if(FindPort((STRPTR)AMICOPPER_AREXX_PORT)){Permit();return 0;}
+ p=CreateMsgPort();
+ if(!p){Permit();return 0;}
+ p->mp_Node.ln_Name=(char *)AMICOPPER_AREXX_PORT; p->mp_Node.ln_Pri=0; AddPort(p);
+ Permit();
+ return p;
 }
 void AmiCopperRexxClose(struct MsgPort *p){struct RexxMsg*m;if(!p)return;RemPort(p);while((m=(struct RexxMsg*)GetMsg(p))){m->rm_Result1=20;m->rm_Result2=0;ReplyMsg((struct Message*)m);}DeleteMsgPort(p);}
 void AmiCopperRexxDrain(struct MsgPort *p,struct AmiCopperDocument *doc,int *quit)
