@@ -1,6 +1,7 @@
 #ifndef AMISCENE_AMICOPPER_UI_H
 #define AMISCENE_AMICOPPER_UI_H
-#include "amicopper_copper.h"\n#include "amicopper.h"
+#include "amicopper_copper.h"
+#include "amicopper.h"
 struct AmiCopperUI { void *window; int running; struct AmiCopperInstruction selected; struct AmiCopperDocument *document; char edit[96]; unsigned int edit_len; int editing; char path[256]; void *arexx_port; };
 int AmiCopperUIOpen(struct AmiCopperUI *ui);
 void AmiCopperUIClose(struct AmiCopperUI *ui);
