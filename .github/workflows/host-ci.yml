@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Ploos-AS/amiga-runtime
-          ref: 4db8319d310a9c333e48672b96d10e9193d7b5d9
+          ref: d04e5db06a63bbdf294441d85f9da57aa5335fb8
           path: amiga-runtime-src
       - name: Build qualified amiga-runtime
         run: docker build -t amiga-runtime:m2 amiga-runtime-src
@@ -99,7 +99,7 @@ jobs:
         run: |
           chmod +x m2-hunk/amiscene-copper-qualify || true
           docker run --rm \
-            -e AMIGA_RUNTIME_TIMEOUT=180 \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
             -v "$PWD/aros-cache:/opt/amiga-runtime/aros:ro" \
             -v "$PWD/m2-hunk:/payload:ro" \
             -v "$PWD/m2-runtime-evidence:/work/evidence" \
