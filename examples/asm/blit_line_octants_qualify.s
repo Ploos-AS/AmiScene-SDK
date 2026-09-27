@@ -13,11 +13,12 @@ Start:
 .loop:
         move.l  a5,a0
         move.l  a2,a3
-        move.l  a2,a4
+        adda.l  #280,a3
+        move.l  a3,a4
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
         moveq   #0,d0
-        moveq   #19,d1
+        move.w  #299,d1
 .scan:
         or.w    (a2)+,d0
         dbra    d1,.scan
