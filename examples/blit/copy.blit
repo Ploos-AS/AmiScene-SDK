@@ -1,0 +1,13 @@
+; AmiScene M3 reference: aligned A -> D copy
+channels ad
+minterm copy_a
+ashift 0
+bshift 0
+afwm $ffff
+alwm $ffff
+amod 0
+bmod 0
+cmod 0
+dmod 0
+width 20
+height 16
