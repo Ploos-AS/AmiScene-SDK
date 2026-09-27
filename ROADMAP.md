@@ -27,9 +27,9 @@ AmiScene remains a **68k ASM-first, hardware-first** demoscene SDK. Tools remove
 - [x] DMA save/restore helpers
 - [x] A500/OCS reference source and qualification procedure
 - [x] Host CLI/parser/generator pipeline PASS (Python 3.10–3.13)
-- [ ] A500/OCS emulator runtime PASS
+- [x] m68k Hunk guest runtime PASS via qualified free AROS/FS-UAE CI harness
 
-**Gate:** close the emulator runtime qualification before declaring M2 complete.
+**Status: complete.** Host CI #152 executed `amiscene-copper-qualify` in the m68k guest with `guest_payload_executed=true` and `status=PASS`. The payload remains 68000/OCS-targeted; the free CI guest host is the qualified A1200/020 AROS profile. A strict A500/OCS/PAL emulator/hardware matrix remains an M12 qualification deliverable.
 
 ## M3 — AmiBlit
 Blitter tooling and small ASM helpers without abstracting the Blitter away.
