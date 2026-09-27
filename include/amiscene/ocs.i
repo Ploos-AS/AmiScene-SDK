@@ -16,7 +16,7 @@ BLTCON1     equ $042
 BLTAFWM     equ $044
 BLTALWM     equ $046
 BLTCPTH     equ $048
-BLTCPtl     equ $04a
+BLTCPTL     equ $04a
 BLTBPTH     equ $04c
 BLTBPTL     equ $04e
 BLTAPTH     equ $050
