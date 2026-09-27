@@ -6,12 +6,14 @@ from .image import build_png,emit_palette_asm,parse_palette
 from .ilbm import load_ilbm
 from .bitplane import emit_incbin
 from .copper import parse as parse_copper,diagnose as diagnose_copper,emit_asm as emit_copper_asm
+from .blit import descriptor as blit_descriptor,emit_asm as emit_blit_asm,MINTERMS
 def main():
  p=argparse.ArgumentParser(prog="amiscene",description="ASM-first Amiga demoscene toolkit");p.add_argument("--version",action="version",version="AmiScene SDK 0.1.0");sub=p.add_subparsers(dest="command")
  t=sub.add_parser("table");t.add_argument("kind",choices=("sine","cosine"));t.add_argument("--entries",type=int,default=256);t.add_argument("--amplitude",type=int,default=32767);t.add_argument("--label",default="table");t.add_argument("--directive",choices=("dc.b","dc.w","dc.l"),default="dc.w")
  im=sub.add_parser("image");im.add_argument("input");im.add_argument("--planes",type=int);im.add_argument("--layout",choices=("interleaved","separate"),default="interleaved");im.add_argument("--output",required=True);im.add_argument("--asm");im.add_argument("--label",default="bitmap");im.add_argument("--palette");im.add_argument("--dither",action="store_true")
  cp=sub.add_parser("copper");cp.add_argument("input",nargs="?");cp.add_argument("--demo",action="store_true");cp.add_argument("--label",default="CopperList");cp.add_argument("-o","--output");cp.add_argument("--check",action="store_true")
- for name in ("blit","pack","build","run","profile","disk"):sub.add_parser(name)
+ bl=sub.add_parser("blit");bl.add_argument("--channels",default="ad");bl.add_argument("--minterm",default="copy_a");bl.add_argument("--ashift",type=int,default=0);bl.add_argument("--bshift",type=int,default=0);bl.add_argument("--afwm",default="$ffff");bl.add_argument("--alwm",default="$ffff");bl.add_argument("--amod",type=int,default=0);bl.add_argument("--bmod",type=int,default=0);bl.add_argument("--cmod",type=int,default=0);bl.add_argument("--dmod",type=int,default=0);bl.add_argument("--width",type=int,required=True);bl.add_argument("--height",type=int,required=True);bl.add_argument("--label",default="BlitDesc");bl.add_argument("-o","--output")
+ for name in ("pack","build","run","profile","disk"):sub.add_parser(name)
  a=p.parse_args()
  if a.command is None:p.print_help();return 0
  if a.command=="table":
@@ -25,6 +27,14 @@ def main():
   for warning in d["warnings"]:print("warning: "+warning)
   if a.check:print("OK: %d Copper commands, %d warning(s)"%(len(commands),len(d["warnings"])));return 0
   asm=emit_copper_asm(commands,a.label)
+  if a.output:Path(a.output).write_text(asm,encoding="utf-8")
+  else:print(asm,end="")
+  return 0
+ if a.command=="blit":
+  mt=MINTERMS[a.minterm] if a.minterm in MINTERMS else int(a.minterm[1:],16) if a.minterm.startswith("$") else int(a.minterm,0)
+  word=lambda v:int(v[1:],16) if isinstance(v,str) and v.startswith("$") else int(v,0) if isinstance(v,str) else int(v)
+  d=blit_descriptor(channels=a.channels,minterm=mt,ashift=a.ashift,bshift=a.bshift,afwm=word(a.afwm),alwm=word(a.alwm),amod=a.amod,bmod=a.bmod,cmod=a.cmod,dmod=a.dmod,width=a.width,height=a.height)
+  asm=emit_blit_asm(d,a.label)
   if a.output:Path(a.output).write_text(asm,encoding="utf-8")
   else:print(asm,end="")
   return 0
