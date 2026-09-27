@@ -104,8 +104,8 @@ jobs:
             -v "$PWD/m2-hunk:/payload:ro" \
             -v "$PWD/m2-runtime-evidence:/work/evidence" \
             amiga-runtime:m2 \
-            test-hunk /payload/amiscene-copper-qualify --profile amiga-ocs-68000-1m
-          jq -e '.status == "PASS" and .runtime == "aros-hunk" and .profile == "amiga-ocs-68000-1m" and .guest_payload_executed == true' m2-runtime-evidence/result.json
+            test-hunk /payload/amiscene-copper-qualify --profile a1200-020-aros
+          jq -e '.status == "PASS" and .runtime == "aros-hunk" and .profile == "a1200-020-aros" and .guest_payload_executed == true' m2-runtime-evidence/result.json
       - name: Upload M2 runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
