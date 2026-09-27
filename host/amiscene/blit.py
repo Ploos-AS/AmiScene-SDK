@@ -29,3 +29,20 @@ def emit_asm(d,label="BlitDesc"):
  lines=[label+":"]+["    dc.w $%04x    ; %s"%(v,n) for v,n in zip(vals,names)]
  lines += [label+"_end:",label+"_size equ "+label+"_end-"+label]
  return "\n".join(lines)+"\n"
+
+def number(s):
+ if isinstance(s,int):return s
+ return int(s[1:],16) if s.startswith("$") else int(s,0)
+def parse(text):
+ d={}
+ for lineno,raw in enumerate(text.splitlines(),1):
+  line=raw.split(";",1)[0].strip()
+  if not line:continue
+  parts=line.split(None,1)
+  if len(parts)!=2:raise ValueError("line %d: expected key value"%lineno)
+  key,value=parts[0].lower(),parts[1].strip()
+  if key=="channels":d[key]=value.lower()
+  elif key=="minterm":d[key]=MINTERMS[value.lower()] if value.lower() in MINTERMS else number(value)
+  elif key in ("ashift","bshift","afwm","alwm","amod","bmod","cmod","dmod","width","height","flags"):d[key]=number(value)
+  else:raise ValueError("line %d: unknown AmiBlit field %s"%(lineno,key))
+ return descriptor(**d)
