@@ -9,8 +9,9 @@ QUALIFY_OUT ?= build/amiscene-copper-qualify
 BLIT_OUT ?= build/amiscene-blit-qualify
 BLIT_FILL_OUT ?= build/amiscene-blit-fill-qualify
 BLIT_LINE_OUT ?= build/amiscene-blit-line-qualify
+BLIT_OCTANTS_OUT ?= build/amiscene-blit-line-octants-qualify
 
-all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT)
+all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANTS_OUT)
 
 build/copper_minimal.o: copper_minimal.s ../../include/amiscene/ocs.i
 	mkdir -p build
@@ -29,6 +30,10 @@ build/blit_fill_qualify.o: blit_fill_qualify.s ../../include/amiscene/ocs.i
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
 build/blit_line_qualify.o: blit_line_qualify.s ../../include/amiscene/ocs.i
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -o $@ $<
+
+build/blit_line_octants_qualify.o: blit_line_octants_qualify.s ../../include/amiscene/ocs.i
 	mkdir -p build
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
@@ -53,6 +58,9 @@ $(BLIT_FILL_OUT): build/blit_fill_qualify.o build/blit_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 $(BLIT_LINE_OUT): build/blit_line_qualify.o build/blit_runtime.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
+
+$(BLIT_OCTANTS_OUT): build/blit_line_octants_qualify.o build/blit_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 clean:
