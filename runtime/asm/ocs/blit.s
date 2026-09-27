@@ -7,6 +7,7 @@
 
         xdef    AmiBlitWait
         xdef    AmiBlitStart
+        xdef    AmiBlitLineStart
 
 AmiBlitWait:
 .wait:  btst    #6,DMACONR(a6)
@@ -25,6 +26,29 @@ AmiBlitStart:
         move.w  (a0)+,BLTDMOD(a6)
         move.l  a1,BLTAPTH(a6)
         move.l  a2,BLTBPTH(a6)
+        move.l  a3,BLTCPTH(a6)
+        move.l  a4,BLTDPTH(a6)
+        move.w  (a0),BLTSIZE(a6)
+        rts
+
+; AmiBlitLineStart
+; a0 -> line descriptor words:
+; BLTCON0, BLTCON1, BLTAFWM, BLTALWM, BLTAMOD, BLTBMOD,
+; BLTCMOD, BLTDMOD, A error term, ADAT, BDAT, BLTSIZE.
+; a3 = C bitmap pointer, a4 = D bitmap pointer, a6 = CUSTOM.
+AmiBlitLineStart:
+        bsr     AmiBlitWait
+        move.w  (a0)+,BLTCON0(a6)
+        move.w  (a0)+,BLTCON1(a6)
+        move.w  (a0)+,BLTAFWM(a6)
+        move.w  (a0)+,BLTALWM(a6)
+        move.w  (a0)+,BLTAMOD(a6)
+        move.w  (a0)+,BLTBMOD(a6)
+        move.w  (a0)+,BLTCMOD(a6)
+        move.w  (a0)+,BLTDMOD(a6)
+        move.w  (a0)+,BLTAPTL(a6)
+        move.w  (a0)+,BLTADAT(a6)
+        move.w  (a0)+,BLTBDAT(a6)
         move.l  a3,BLTCPTH(a6)
         move.l  a4,BLTDPTH(a6)
         move.w  (a0),BLTSIZE(a6)
