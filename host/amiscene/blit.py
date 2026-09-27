@@ -49,6 +49,13 @@ def parse(text):
   if len(parts)!=2:raise ValueError("line %d: expected key value"%lineno)
   key,value=parts[0].lower(),parts[1].strip()
   if key=="channels":d[key]=value.lower()
+  elif key=="fill":
+   mode=value.lower()
+   if mode not in ("inclusive","exclusive"):raise ValueError("line %d: fill must be inclusive or exclusive"%lineno)
+   d["flags"]=int(d.get("flags",0))|BLTCON1_FLAGS[mode+"_fill"]|BLTCON1_FLAGS["descending"]
+  elif key=="fill_carry":
+   if value.lower() not in ("0","1","false","true","no","yes"):raise ValueError("line %d: fill_carry must be boolean"%lineno)
+   if value.lower() in ("1","true","yes"):d["flags"]=int(d.get("flags",0))|BLTCON1_FLAGS["fill_carry"]
   elif key=="minterm":d[key]=MINTERMS[value.lower()] if value.lower() in MINTERMS else number(value)
   elif key in ("ashift","bshift","afwm","alwm","amod","bmod","cmod","dmod","width","height","flags"):d[key]=number(value)
   else:raise ValueError("line %d: unknown AmiBlit field %s"%(lineno,key))
