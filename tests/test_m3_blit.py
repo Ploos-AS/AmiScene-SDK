@@ -1,6 +1,6 @@
 import sys
 import unittest
-from amiscene.blit import descriptor,bltcon0,bltsize,emit_asm
+from amiscene.blit import descriptor,parse,bltcon0,bltcon1,bltsize,emit_asm
 
 class BlitTests(unittest.TestCase):
  def test_copy_a_descriptor(self):
@@ -14,6 +14,14 @@ class BlitTests(unittest.TestCase):
  def test_rejects_invalid_dimensions(self):
   with self.assertRaises(ValueError):descriptor(width=65)
   with self.assertRaises(ValueError):descriptor(height=0)
+ def test_reference_copy_source(self):
+  from pathlib import Path
+  d=parse(Path("examples/blit/copy.blit").read_text())
+  self.assertEqual(bltcon0(d),0x09f0);self.assertEqual(bltcon1(d),0);self.assertEqual(bltsize(d),0x0414)
+ def test_reference_cookie_cut_source(self):
+  from pathlib import Path
+  d=parse(Path("examples/blit/cookie-cut.blit").read_text())
+  self.assertEqual(bltcon0(d),0x0fca);self.assertEqual(bltsize(d),0x0402)
  def test_cli_named_minterm(self):
   from amiscene.cli import main
   import tempfile
