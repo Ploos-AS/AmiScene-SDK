@@ -28,4 +28,7 @@ BLTCMOD     equ $060
 BLTBMOD     equ $062
 BLTAMOD     equ $064
 BLTDMOD     equ $066
+BLTCDAT     equ $070
+BLTBDAT     equ $072
+BLTADAT     equ $074
 DMAF_BLITTER equ $0040
