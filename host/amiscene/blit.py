@@ -1,6 +1,7 @@
 """AmiBlit: explicit OCS Blitter descriptor validation and ASM generation."""
 MINTERMS={"copy_a":0xF0,"copy_b":0xCC,"copy_c":0xAA,"cookie_cut":0xCA}
 CHANNEL_BITS={"a":0x0800,"b":0x0400,"c":0x0200,"d":0x0100}
+BLTCON1_FLAGS={"exclusive_fill":0x0010,"inclusive_fill":0x0008,"fill_carry":0x0004,"descending":0x0002,"line":0x0001}
 def descriptor(**kw):
  d={"channels":"ad","minterm":MINTERMS["copy_a"],"ashift":0,"bshift":0,"afwm":0xffff,"alwm":0xffff,
     "amod":0,"bmod":0,"cmod":0,"dmod":0,"width":1,"height":1,"flags":0}
@@ -21,6 +22,12 @@ def validate(d):
 def bltcon0(d):
  return (int(d["ashift"])<<12)|sum(CHANNEL_BITS[c] for c in str(d["channels"]).lower())|int(d["minterm"])
 def bltcon1(d):return int(d["bshift"])<<12|int(d.get("flags",0))
+def fill_descriptor(mode="inclusive",carry=False,**kw):
+ if mode not in ("inclusive","exclusive"):raise ValueError("fill mode must be inclusive or exclusive")
+ flags=BLTCON1_FLAGS[mode+"_fill"]|BLTCON1_FLAGS["descending"]
+ if carry:flags|=BLTCON1_FLAGS["fill_carry"]
+ if "flags" in kw:flags|=int(kw.pop("flags"))
+ return descriptor(flags=flags,**kw)
 def bltsize(d):return ((int(d["height"])&0x3ff)<<6)|(int(d["width"])&0x3f)
 def emit_asm(d,label="BlitDesc"):
  validate(d)
