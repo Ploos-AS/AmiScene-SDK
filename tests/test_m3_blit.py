@@ -1,6 +1,6 @@
 import sys
 import unittest
-from amiscene.blit import descriptor,parse,bltcon0,bltcon1,bltsize,emit_asm
+from amiscene.blit import descriptor,fill_descriptor,parse,bltcon0,bltcon1,bltsize,emit_asm
 
 class BlitTests(unittest.TestCase):
  def test_copy_a_descriptor(self):
@@ -11,6 +11,14 @@ class BlitTests(unittest.TestCase):
  def test_masks_shifts_modulos_emit_readably(self):
   out=emit_asm(descriptor(ashift=3,bshift=7,afwm=0xff00,alwm=0x00ff,amod=-2,dmod=40),"Bob")
   self.assertIn("$39f0",out);self.assertIn("$7000",out);self.assertIn("$fffe",out);self.assertIn("$0028",out)
+ def test_inclusive_fill_is_descending(self):
+  d=fill_descriptor("inclusive")
+  self.assertEqual(bltcon1(d),0x000a)
+ def test_exclusive_fill_with_carry(self):
+  d=fill_descriptor("exclusive",carry=True)
+  self.assertEqual(bltcon1(d),0x0016)
+ def test_rejects_both_fill_modes(self):
+  with self.assertRaises(ValueError):fill_descriptor("both")
  def test_rejects_invalid_dimensions(self):
   with self.assertRaises(ValueError):descriptor(width=65)
   with self.assertRaises(ValueError):descriptor(height=0)
