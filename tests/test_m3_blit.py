@@ -26,6 +26,10 @@ class BlitTests(unittest.TestCase):
   from pathlib import Path
   d=parse(Path("examples/blit/copy.blit").read_text())
   self.assertEqual(bltcon0(d),0x09f0);self.assertEqual(bltcon1(d),0);self.assertEqual(bltsize(d),0x0414)
+ def test_reference_fill_source(self):
+  from pathlib import Path
+  d=parse(Path("examples/blit/fill-inclusive.blit").read_text())
+  self.assertEqual(bltcon0(d),0x09f0);self.assertEqual(bltcon1(d),0x000a);self.assertEqual(bltsize(d),0x0402)
  def test_reference_cookie_cut_source(self):
   from pathlib import Path
   d=parse(Path("examples/blit/cookie-cut.blit").read_text())
