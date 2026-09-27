@@ -5,6 +5,9 @@
 
         include "../../../include/amiscene/ocs.i"
 
+        xdef    AmiBlitWait
+        xdef    AmiBlitStart
+
 AmiBlitWait:
 .wait:  btst    #6,DMACONR(a6)
         bne.s   .wait
