@@ -27,7 +27,7 @@ LineDesc:
         dc.w    40,40              ; CMOD, DMOD
         dc.w    -30                ; A error term
         dc.w    $8000,$ffff        ; ADAT, texture
-        dc.w    $0410              ; height 16, width 16? line mode width field fixed by runtime test
+        dc.w    $0402              ; height 16, line-mode width field fixed at 2
 
         cnop    0,4
 Bitmap:
