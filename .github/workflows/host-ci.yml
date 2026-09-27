@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Ploos-AS/amiga-runtime
-          ref: d04e5db06a63bbdf294441d85f9da57aa5335fb8
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
           path: amiga-runtime-src
       - name: Build qualified amiga-runtime
         run: docker build -t amiga-runtime:m2 amiga-runtime-src
