@@ -7,8 +7,9 @@ VLINKFLAGS ?= -bamigahunk -Bstatic
 OUT ?= build/amiscene-copper
 QUALIFY_OUT ?= build/amiscene-copper-qualify
 BLIT_OUT ?= build/amiscene-blit-qualify
+BLIT_FILL_OUT ?= build/amiscene-blit-fill-qualify
 
-all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT)
+all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT)
 
 build/copper_minimal.o: copper_minimal.s ../../include/amiscene/ocs.i
 	mkdir -p build
@@ -19,6 +20,10 @@ build/copper_qualify.o: copper_qualify.s ../../include/amiscene/ocs.i
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
 build/blit_qualify.o: blit_qualify.s ../../include/amiscene/ocs.i
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -o $@ $<
+
+build/blit_fill_qualify.o: blit_fill_qualify.s ../../include/amiscene/ocs.i
 	mkdir -p build
 	$(VASM) $(VASMFLAGS) -o $@ $<
 
@@ -37,6 +42,9 @@ $(QUALIFY_OUT): build/copper_qualify.o build/copper_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 $(BLIT_OUT): build/blit_qualify.o build/blit_runtime.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
+
+$(BLIT_FILL_OUT): build/blit_fill_qualify.o build/blit_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 clean:
