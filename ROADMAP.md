@@ -34,13 +34,14 @@ AmiScene remains a **68k ASM-first, hardware-first** demoscene SDK. Tools remove
 ## M3 — AmiBlit
 Blitter tooling and small ASM helpers without abstracting the Blitter away.
 
-- [ ] Blitter minterms and channel selection
-- [ ] Masks, shifts and modulos
+- [x] Blitter minterms and channel selection
+- [x] Masks, shifts and modulos
 - [ ] Copy/fill/cookie-cut helpers
 - [ ] Line mode support
-- [ ] ASM-oriented descriptor/data generation
+- [x] 68000 Hunk build + m68k guest execution gate (Host CI #169, guest RC 0)
+- [x] ASM-oriented descriptor/data generation
 - [ ] Timing and DMA-contention guidance
-- [ ] Readable reference effects and qualification cases
+- [x] Readable copy/cookie-cut reference descriptors and executable A→D copy qualification
 
 ## M4 — AmiAssets
 Extend the deterministic asset pipeline around assembly-friendly output.
