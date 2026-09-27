@@ -1,6 +1,6 @@
 import sys
 import unittest
-from amiscene.blit import descriptor,fill_descriptor,parse,bltcon0,bltcon1,bltsize,emit_asm
+from amiscene.blit import descriptor,fill_descriptor,line_descriptor,parse,bltcon0,bltcon1,bltsize,emit_asm
 
 class BlitTests(unittest.TestCase):
  def test_copy_a_descriptor(self):
@@ -11,6 +11,16 @@ class BlitTests(unittest.TestCase):
  def test_masks_shifts_modulos_emit_readably(self):
   out=emit_asm(descriptor(ashift=3,bshift=7,afwm=0xff00,alwm=0x00ff,amod=-2,dmod=40),"Bob")
   self.assertIn("$39f0",out);self.assertIn("$7000",out);self.assertIn("$fffe",out);self.assertIn("$0028",out)
+ def test_line_horizontal_registers(self):
+  d=line_descriptor(0,0,15,0,40)
+  self.assertEqual(d["bltcon0"],0x0b4a);self.assertEqual(d["bltcon1"],0x0059)
+  self.assertEqual(d["apt"],-30);self.assertEqual(d["amod"],-60);self.assertEqual(d["bmod"],0)
+  self.assertEqual(d["cmod"],40);self.assertEqual(d["dmod"],40);self.assertEqual(d["width"],2);self.assertEqual(d["height"],16)
+ def test_line_texture_and_one_dot(self):
+  d=line_descriptor(3,2,3,9,40,texture=0xaaaa,texture_start=5,one_dot=True)
+  self.assertEqual(d["bdat"],0xaaaa);self.assertEqual(d["bltcon1"]>>12,5);self.assertTrue(d["bltcon1"]&2)
+ def test_line_rejects_over_1024(self):
+  with self.assertRaises(ValueError):line_descriptor(0,0,1024,0,40)
  def test_inclusive_fill_is_descending(self):
   d=fill_descriptor("inclusive")
   self.assertEqual(bltcon1(d),0x000a)
