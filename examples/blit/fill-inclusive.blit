@@ -1,0 +1,12 @@
+; OCS inclusive area-fill descriptor.
+; Area fill runs descending; pointers must therefore start at the last word.
+channels ad
+minterm copy_a
+fill inclusive
+fill_carry false
+afwm $ffff
+alwm $ffff
+amod 0
+dmod 0
+width 2
+height 16
