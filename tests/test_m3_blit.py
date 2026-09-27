@@ -14,3 +14,14 @@ def test_masks_shifts_modulos_emit_readably():
 def test_rejects_invalid_dimensions():
  with pytest.raises(ValueError):descriptor(width=65)
  with pytest.raises(ValueError):descriptor(height=0)
+
+def test_cli_named_minterm(tmp_path):
+ from amiscene.cli import main
+ import sys
+ out=tmp_path/"blit.s";old=sys.argv
+ try:
+  sys.argv=["amiscene","blit","--width","20","--height","16","--minterm","copy_a","--channels","ad","--label","Copy","-o",str(out)]
+  assert main()==0
+ finally:sys.argv=old
+ text=out.read_text()
+ assert "Copy:" in text and "$09f0" in text
