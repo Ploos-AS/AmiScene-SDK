@@ -100,7 +100,7 @@ jobs:
           chmod +x m2-hunk/amiscene-copper-qualify || true
           docker run --rm \
             -e AMIGA_RUNTIME_TIMEOUT=60 \
-            -v "$PWD/aros-cache:/opt/amiga-runtime/aros:ro" \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
             -v "$PWD/m2-hunk:/payload:ro" \
             -v "$PWD/m2-runtime-evidence:/work/evidence" \
             amiga-runtime:m2 \
