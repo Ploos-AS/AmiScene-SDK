@@ -38,13 +38,19 @@ jobs:
             -w /workspace/examples/asm \
             ghcr.io/ploos-as/amiga-dev:edge \
             amiga-build
-      - name: Inspect M2 artifacts
-        run: test -s examples/asm/build/amiscene-copper && test -s examples/asm/build/amiscene-copper-qualify
+      - name: Inspect m68k artifacts
+        run: test -s examples/asm/build/amiscene-copper && test -s examples/asm/build/amiscene-copper-qualify && test -s examples/asm/build/amiscene-blit-qualify
       - name: Upload M2 qualification Hunk
         uses: actions/upload-artifact@v4
         with:
           name: amiscene-m2-hunk
           path: examples/asm/build/amiscene-copper-qualify
+          if-no-files-found: error
+      - name: Upload M3 qualification Hunk
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-hunk
+          path: examples/asm/build/amiscene-blit-qualify
           if-no-files-found: error
 
   amicopper-source-tests:
@@ -112,4 +118,45 @@ jobs:
         with:
           name: amiscene-m2-runtime-evidence
           path: m2-runtime-evidence/
+          if-no-files-found: warn
+
+  m3-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-hunk
+          path: m3-hunk
+      - uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/amiga-runtime
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
+          path: amiga-runtime-src
+      - name: Build qualified amiga-runtime
+        run: docker build -t amiga-runtime:m3 amiga-runtime-src
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/m3-runtime-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:m3 prepare-aros
+      - name: Execute M3 Blitter qualification Hunk
+        run: |
+          chmod +x m3-hunk/amiscene-blit-qualify || true
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/m3-hunk:/payload:ro" \
+            -v "$PWD/m3-runtime-evidence:/work/evidence" \
+            amiga-runtime:m3 \
+            test-hunk /payload/amiscene-blit-qualify --profile a1200-020-aros
+          jq -e '.status == "PASS" and .runtime == "aros-hunk" and .profile == "a1200-020-aros" and .guest_payload_executed == true and .guest_rc == 0' m3-runtime-evidence/result.json
+      - name: Upload M3 runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-runtime-evidence
+          path: m3-runtime-evidence/
           if-no-files-found: warn
