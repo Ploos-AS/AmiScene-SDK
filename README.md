@@ -39,8 +39,8 @@ amiscene profile
 amiscene disk
 ```
 
-Host tools should emit assembly-friendly data: labels, `dc.b/dc.w/dc.l`, offsets, includes and `incbin`-ready assets.
+Host tools should emit assembly-friendly data: labels, `dc.b/dc.w/dc.l`, offsets, includes and `incbin`-ready assets. Audio, sync and timeline tooling follows the same rule: generated data stays inspectable and the hardware remains explicit.\n\nThe optional director/effect ABI is deliberately small. Effects remain usable directly; the SDK is not a demo-maker or opaque engine.
 
-No proprietary Kickstart ROMs, AmigaOS files, restricted demo assets or malware belong in this repository.
+No proprietary Kickstart ROMs, AmigaOS files, restricted demo assets or malware belong in this repository. Third-party replay/depacker integrations must keep compatible licensing and provenance explicit.
 
 See [ROADMAP.md](ROADMAP.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [LICENSES.md](LICENSES.md).
