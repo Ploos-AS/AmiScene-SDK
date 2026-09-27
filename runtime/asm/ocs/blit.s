@@ -33,7 +33,7 @@ AmiBlitStart:
 
 ; AmiBlitLineStart
 ; a0 -> line descriptor words:
-; BLTCON0, BLTCON1, BLTAFWM, BLTALWM, BLTAMOD, BLTBMOD,
+; BLTCON0 (A+C+D; B texture is preloaded), BLTCON1, BLTAFWM, BLTALWM, BLTAMOD, BLTBMOD,
 ; BLTCMOD, BLTDMOD, A error term, ADAT, BDAT, BLTSIZE.
 ; a3 = C bitmap pointer, a4 = D bitmap pointer, a6 = CUSTOM.
 AmiBlitLineStart:
