@@ -39,6 +39,7 @@ Blitter tooling and small ASM helpers without abstracting the Blitter away.
 - [ ] Copy/fill/cookie-cut helpers
 - [ ] Line mode support
 - [x] 68000 Hunk build + m68k guest execution gate (Host CI #169, guest RC 0)
+- [x] OCS inclusive area-fill guest qualification (Host CI #179, guest RC 0)
 - [x] ASM-oriented descriptor/data generation
 - [ ] Timing and DMA-contention guidance
 - [x] Readable copy/cookie-cut reference descriptors and executable A→D copy qualification
