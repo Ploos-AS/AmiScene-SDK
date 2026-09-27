@@ -16,6 +16,13 @@ class BlitTests(unittest.TestCase):
   self.assertEqual(d["bltcon0"],0x0b4a);self.assertEqual(d["bltcon1"],0x0059)
   self.assertEqual(d["apt"],-30);self.assertEqual(d["amod"],-60);self.assertEqual(d["bmod"],0)
   self.assertEqual(d["cmod"],40);self.assertEqual(d["dmod"],40);self.assertEqual(d["width"],2);self.assertEqual(d["height"],16)
+ def test_line_all_octants(self):
+  cases=[((0,0,8,3),0,0x18),((0,0,3,8),1,0x04),((8,0,5,8),2,0x0c),((8,0,0,3),3,0x1c),((8,8,0,5),4,0x14),((8,8,5,0),5,0x08),((0,8,3,0),6,0x00),((0,8,8,5),7,0x10)]
+  for pts,octant,bits in cases:
+   d=line_descriptor(*pts,40)
+   self.assertEqual(d["octant"],octant)
+   self.assertEqual(d["bltcon1"]&0x1c,bits)
+   self.assertEqual(bool(d["bltcon1"]&0x40),d["apt"]<0)
  def test_line_texture_and_one_dot(self):
   d=line_descriptor(3,2,3,9,40,texture=0xaaaa,texture_start=5,one_dot=True)
   self.assertEqual(d["bdat"],0xaaaa);self.assertEqual(d["bltcon1"]>>12,5);self.assertTrue(d["bltcon1"]&2)
