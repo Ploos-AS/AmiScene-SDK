@@ -3,9 +3,16 @@
         xref AmiBlitLineStart
         xref AmiBlitWait
 Start:
+        move.l 4.w,a6
+        move.l #4800,d0
+        move.l #$10002,d1       ; MEMF_CHIP|MEMF_CLEAR
+        jsr -198(a6)            ; Exec AllocMem()
+        tst.l d0
+        beq.s .alloc_fail
+        move.l d0,a2
+        move.l d0,-(sp)         ; preserve allocation base
         lea CUSTOM,a6
         lea Cases(pc),a5
-        lea Bitmaps(pc),a2
         lea Starts(pc),a1
         lea Expected(pc),a0
         moveq #7,d7
@@ -30,9 +37,19 @@ Start:
         add.l #24,a5
         add.l #600,a2
         dbra d7,.case
-        moveq #0,d0
+        moveq #0,d7
+        bra.s .done
+.fail:  moveq #1,d7
+.done:
+        move.l (sp)+,a1
+        move.l 4.w,a6
+        move.l a1,a1
+        move.l #4800,d0
+        jsr -210(a6)            ; Exec FreeMem(address,size)
+        move.l d7,d0
         rts
-.fail:  moveq #1,d0
+.alloc_fail:
+        moveq #2,d0
         rts
 
 ; y1*40 offsets. x1 stays within the first word; BLTCON0 START handles x.
@@ -59,5 +76,4 @@ Expected:
         dc.w $0400,$0400,$0200,$0200,$0200,$0100,$0100,$0080,$0080
         dc.w $1000,$1000,$2000,$2000,$2000,$4000,$4000,$8000,$8000
         dc.w 0,0,0,0,0,$0180,$0e00,$3000,$c000
-        cnop 0,4
-Bitmaps: dcb.b 4800,0
+
