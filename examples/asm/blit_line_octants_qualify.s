@@ -22,7 +22,8 @@ Start:
         lea 120(a2),a3
         moveq #8,d5
 .row:
-        cmp.w (a0)+,(a3)
+        move.w (a0)+,d0
+        cmp.w (a3),d0
         bne.s .fail
         adda.w #40,a3
         dbra d5,.row
