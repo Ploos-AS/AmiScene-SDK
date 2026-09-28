@@ -43,7 +43,6 @@ Start:
 .done:
         move.l (sp)+,a1
         move.l 4.w,a6
-        move.l a1,a1
         move.l #4800,d0
         jsr -210(a6)            ; Exec FreeMem(address,size)
         move.l d7,d0
