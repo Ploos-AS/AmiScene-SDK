@@ -41,7 +41,8 @@ Blitter tooling and small ASM helpers without abstracting the Blitter away.
 - [x] 68000 Hunk build + m68k guest execution gate (Host CI #169, guest RC 0)
 - [x] OCS inclusive area-fill guest qualification (Host CI #179, guest RC 0)
 - [x] OCS Blitter line-mode guest qualification, horizontal reference path (Host CI #188, guest RC 0)
-- [ ] Blitter line-mode octant matrix qualification
+- [x] Blitter line-mode octant matrix qualification (Host CI #195, all 8 guest paths execute/write, guest RC 0)
+- [ ] Pixel-exact line raster qualification for all 8 octants
 - [x] ASM-oriented descriptor/data generation
 - [ ] Timing and DMA-contention guidance
 - [x] Readable copy/cookie-cut reference descriptors and executable A→D copy qualification
