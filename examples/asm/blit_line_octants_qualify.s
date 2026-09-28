@@ -54,16 +54,16 @@ Start:
 ; y1*40 offsets. x1 stays within the first word; BLTCON0 START handles x.
 Starts: dc.w 0,0,0,0,320,320,320,320
 
-; major=8, minor=3: APT=-10, AMOD=-20, BMOD=12, size=(9<<6)|2.
+; major=8, minor=3: APT=-4, AMOD=-20, BMOD=12, size=(9<<6)|2.
 Cases:
-        dc.w $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $0b4a,$0045,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $8b4a,$004d,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $8b4a,$005d,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $8b4a,$0055,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $8b4a,$0049,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $0b4a,$0041,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
-        dc.w $0b4a,$0051,$ffff,$ffff,-20,12,40,40,-10,$8000,$ffff,$0242
+        dc.w $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $0b4a,$0045,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $8b4a,$004d,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $8b4a,$005d,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $8b4a,$0055,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $8b4a,$0049,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $0b4a,$0041,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w $0b4a,$0051,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
 
 ; Independent integer-Bresenham oracle, one 16-pixel word for rows y=0..8.
 Expected:
