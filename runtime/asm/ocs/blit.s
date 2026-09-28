@@ -46,7 +46,9 @@ AmiBlitLineStart:
         move.w  (a0)+,BLTBMOD(a6)
         move.w  (a0)+,BLTCMOD(a6)
         move.w  (a0)+,BLTDMOD(a6)
-        move.w  (a0)+,BLTAPTL(a6)
+        move.w  (a0)+,d0
+        ext.l   d0
+        move.l  d0,BLTAPTH(a6)
         move.w  (a0)+,BLTADAT(a6)
         move.w  (a0)+,BLTBDAT(a6)
         move.l  a3,BLTCPTH(a6)
