@@ -64,11 +64,13 @@ jobs:
           name: amiscene-m3-line-hunk
           path: examples/asm/build/amiscene-blit-line-qualify
           if-no-files-found: error
-      - name: Upload M3 line octant qualification Hunk
+      - name: Upload M3 line octant qualification Hunks
         uses: actions/upload-artifact@v4
         with:
           name: amiscene-m3-line-octants-hunk
-          path: examples/asm/build/amiscene-blit-line-octants-qualify
+          path: |
+            examples/asm/build/amiscene-blit-line-octants-qualify
+            examples/asm/build/amiscene-blit-line-octant-*-qualify
           if-no-files-found: error
 
   amicopper-source-tests:
@@ -259,6 +261,52 @@ jobs:
         with:
           name: amiscene-m3-line-runtime-evidence
           path: m3-line-runtime-evidence/
+          if-no-files-found: warn
+
+  m3-line-octant-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        octant: [0, 1, 2, 3, 4, 5, 6, 7]
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-line-octants-hunk
+          path: m3-line-octants-hunk
+      - uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/amiga-runtime
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
+          path: amiga-runtime-src
+      - name: Build qualified amiga-runtime
+        run: docker build -t amiga-runtime:m3-line-octant amiga-runtime-src
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/m3-line-octant-runtime-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:m3-line-octant prepare-aros
+      - name: Execute isolated M3 line octant ${{ matrix.octant }}
+        run: |
+          payload="m3-line-octants-hunk/amiscene-blit-line-octant-${{ matrix.octant }}-qualify"
+          chmod +x "$payload" || true
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/m3-line-octants-hunk:/payload:ro" \
+            -v "$PWD/m3-line-octant-runtime-evidence:/work/evidence" \
+            amiga-runtime:m3-line-octant \
+            test-hunk "/payload/amiscene-blit-line-octant-${{ matrix.octant }}-qualify" --profile a1200-020-aros
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 0' m3-line-octant-runtime-evidence/result.json
+      - name: Upload isolated octant evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-octant-${{ matrix.octant }}-runtime-evidence
+          path: m3-line-octant-runtime-evidence/
           if-no-files-found: warn
 
   m3-line-octants-runtime:
