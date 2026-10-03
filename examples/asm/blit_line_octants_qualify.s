@@ -8,7 +8,7 @@ Start:
         move.l #$10002,d1       ; MEMF_CHIP|MEMF_CLEAR
         jsr -198(a6)            ; Exec AllocMem()
         tst.l d0
-        beq.s .alloc_fail
+        beq .alloc_fail
         move.l d0,a2
         move.l d0,-(sp)         ; preserve allocation base
         lea CUSTOM,a6
