@@ -16,6 +16,7 @@ Start:
         lea Starts(pc),a1
         lea Expected(pc),a0
         moveq #7,d7
+        moveq #0,d4            ; diagnostic: current octant index
 .case:
         move.w (a1)+,d6
         lea 120(a2),a3
@@ -36,10 +37,12 @@ Start:
         dbra d5,.row
         add.l #24,a5
         add.l #600,a2
+        addq.w #1,d4
         dbra d7,.case
         moveq #0,d7
         bra.s .done
-.fail:  moveq #1,d7
+.fail:  move.w d4,d7
+        addq.w #1,d7           ; return 1..8 = failing octant
 .done:
         move.l (sp)+,a1
         move.l 4.w,a6
