@@ -15,8 +15,25 @@ Start:
         lea Cases(pc),a5
         lea Starts(pc),a1
         lea Expected(pc),a0
+        ifnd OCTANT
+OCTANT  equ -1
+        endif
+        ifeq OCTANT+1
         moveq #7,d7
-        moveq #0,d4            ; diagnostic: current octant index
+        moveq #0,d4            ; all-octants mode
+        else
+        moveq #0,d7            ; one isolated case
+        moveq #OCTANT,d4
+        mulu #24,d4
+        adda.l d4,a5
+        moveq #OCTANT,d4
+        mulu #2,d4
+        adda.l d4,a1
+        moveq #OCTANT,d4
+        mulu #18,d4
+        adda.l d4,a0
+        moveq #OCTANT,d4
+        endif
 .case:
         move.w (a1)+,d6
         lea 120(a2),a3
@@ -48,9 +65,11 @@ Start:
         adda.w #40,a3
         dbra d5,.row
         add.l #24,a5
+        ifeq OCTANT+1
         add.l #600,a2
         addq.w #1,d4
         dbra d7,.case
+        endif
         moveq #0,d7
         bra.s .done
 .fail:  move.w d4,d7
