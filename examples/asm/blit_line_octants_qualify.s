@@ -25,7 +25,19 @@ Start:
         move.l a0,-(sp)
         move.l a5,a0
         bsr AmiBlitLineStart
-        bsr AmiBlitWait
+        ; Bounded wait: never let a bad line-mode octant hang CI forever.
+        ; Return 0x40+octant (64..71) when Blitter BUSY does not clear.
+        move.l #$00100000,d3
+.wait:
+        btst #6,DMACONR(a6)
+        beq.s .wait_done
+        subq.l #1,d3
+        bne.s .wait
+        move.l (sp)+,a0
+        move.w d4,d7
+        add.w #$40,d7
+        bra.s .done
+.wait_done:
         move.l (sp)+,a0
         lea 120(a2),a3
         moveq #8,d5
