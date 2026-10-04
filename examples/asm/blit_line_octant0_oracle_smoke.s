@@ -20,10 +20,21 @@ Start:
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
-        ; Single post-Blitter Chip RAM read.  Do not compare or loop yet:
-        ; this distinguishes a read hazard from oracle control flow.
-        move.w  (a2),d7
+        ; Verify the first two oracle rows only.  This adds one pointer
+        ; step and comparison without the DBRA loop used by the full test.
+        lea     Expected(pc),a0
+        move.l  a2,a3
+        move.w  (a0)+,d0
+        cmp.w   (a3),d0
+        bne.s   .mismatch
+        adda.w  #40,a3
+        move.w  (a0)+,d0
+        cmp.w   (a3),d0
+        bne.s   .mismatch
         moveq   #0,d0
+        rts
+.mismatch:
+        moveq   #1,d0
         rts
 .alloc_fail:
         moveq   #2,d0
