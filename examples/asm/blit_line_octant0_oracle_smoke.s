@@ -20,15 +20,17 @@ Start:
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
-        ; Row 0 comparison is known-good.  Add only the +40-byte bitmap
-        ; step and a raw read of row 1; do not compare row 1 yet.
+        ; Row 0 compare and row 1 access are known-good.  Compare row 1
+        ; explicitly, still without a loop.
         lea     Expected(pc),a0
-        move.w  (a0),d0
+        move.w  (a0)+,d0
         cmp.w   (a2),d0
         bne.s   .mismatch
         move.l  a2,a3
         adda.w  #40,a3
-        move.w  (a3),d7
+        move.w  (a0),d0
+        cmp.w   (a3),d0
+        bne.s   .mismatch
         moveq   #0,d0
         rts
 .mismatch:
