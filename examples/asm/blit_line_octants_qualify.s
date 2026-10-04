@@ -10,7 +10,7 @@ Start:
         tst.l d0
         beq .alloc_fail
         move.l d0,a2
-        move.l d0,-(sp)         ; preserve allocation base
+        move.l d0,a4            ; preserve allocation base across qualification
         lea CUSTOM,a6
         lea Cases(pc),a5
         lea Starts(pc),a1
@@ -75,8 +75,11 @@ OCTANT  equ -1
 .fail:  move.w d4,d7
         addq.w #1,d7           ; return 1..8 = failing octant
 .done:
-        move.l (sp)+,a1
         move.l 4.w,a6
+        move.l a2,a1            ; allocation base
+        ifeq OCTANT+1
+        sub.l #4200,a1          ; all-octants mode advanced a2 seven times
+        endif
         move.l #4800,d0
         jsr -210(a6)            ; Exec FreeMem(address,size)
         move.l d7,d0
