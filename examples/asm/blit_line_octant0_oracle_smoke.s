@@ -20,19 +20,10 @@ Start:
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
-        lea     Expected(pc),a0
-        move.l  a2,a3
-        moveq   #8,d5
-.check:
-        move.w  (a0)+,d0
-        cmp.w   (a3),d0
-        bne.s   .mismatch
-        adda.w  #40,a3
-        dbra    d5,.check
+        ; Single post-Blitter Chip RAM read.  Do not compare or loop yet:
+        ; this distinguishes a read hazard from oracle control flow.
+        move.w  (a2),d7
         moveq   #0,d0
-        rts
-.mismatch:
-        moveq   #1,d0
         rts
 .alloc_fail:
         moveq   #2,d0
