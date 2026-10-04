@@ -70,6 +70,12 @@ jobs:
           name: amiscene-m3-line-octant0-smoke-hunk
           path: examples/asm/build/amiscene-blit-line-octant0-smoke
           if-no-files-found: error
+      - name: Upload M3 octant-0 AllocMem smoke Hunk
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-octant0-alloc-smoke-hunk
+          path: examples/asm/build/amiscene-blit-line-octant0-alloc-smoke
+          if-no-files-found: error
       - name: Upload M3 line octant qualification Hunks
         uses: actions/upload-artifact@v4
         with:
@@ -267,6 +273,46 @@ jobs:
         with:
           name: amiscene-m3-line-runtime-evidence
           path: m3-line-runtime-evidence/
+          if-no-files-found: warn
+
+  m3-line-octant0-alloc-smoke-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-line-octant0-alloc-smoke-hunk
+          path: m3-line-octant0-alloc-smoke-hunk
+      - uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/amiga-runtime
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
+          path: amiga-runtime-src
+      - name: Build qualified amiga-runtime
+        run: docker build -t amiga-runtime:m3-line-octant0-alloc-smoke amiga-runtime-src
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/m3-line-octant0-alloc-smoke-runtime-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:m3-line-octant0-alloc-smoke prepare-aros
+      - name: Execute octant-0 AllocMem smoke Hunk
+        run: |
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/m3-line-octant0-alloc-smoke-hunk:/payload:ro" \
+            -v "$PWD/m3-line-octant0-alloc-smoke-runtime-evidence:/work/evidence" \
+            amiga-runtime:m3-line-octant0-alloc-smoke \
+            test-hunk /payload/amiscene-blit-line-octant0-alloc-smoke --profile a1200-020-aros
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 0' m3-line-octant0-alloc-smoke-runtime-evidence/result.json
+      - name: Upload octant-0 AllocMem smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-octant0-alloc-smoke-runtime-evidence
+          path: m3-line-octant0-alloc-smoke-runtime-evidence/
           if-no-files-found: warn
 
   m3-line-octant0-smoke-runtime:
