@@ -20,16 +20,11 @@ Start:
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
-        ; Verify the first two oracle rows only.  This adds one pointer
-        ; step and comparison without the DBRA loop used by the full test.
+        ; Compare only row 0.  The previous one-read probe passed, while
+        ; the two-row compare timed out; isolate comparison from stepping.
         lea     Expected(pc),a0
-        move.l  a2,a3
-        move.w  (a0)+,d0
-        cmp.w   (a3),d0
-        bne.s   .mismatch
-        adda.w  #40,a3
-        move.w  (a0)+,d0
-        cmp.w   (a3),d0
+        move.w  (a0),d0
+        cmp.w   (a2),d0
         bne.s   .mismatch
         moveq   #0,d0
         rts
