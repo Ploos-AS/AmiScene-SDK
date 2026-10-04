@@ -20,12 +20,15 @@ Start:
         bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
-        ; Compare only row 0.  The previous one-read probe passed, while
-        ; the two-row compare timed out; isolate comparison from stepping.
+        ; Row 0 comparison is known-good.  Add only the +40-byte bitmap
+        ; step and a raw read of row 1; do not compare row 1 yet.
         lea     Expected(pc),a0
         move.w  (a0),d0
         cmp.w   (a2),d0
         bne.s   .mismatch
+        move.l  a2,a3
+        adda.w  #40,a3
+        move.w  (a3),d7
         moveq   #0,d0
         rts
 .mismatch:
