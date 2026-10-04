@@ -29,16 +29,10 @@ Start:
         bne.s   .mismatch
         adda.w  #40,a3
         dbra    d5,.check
-        moveq   #0,d7
-        bra.s   .free
+        moveq   #0,d0
+        rts
 .mismatch:
-        moveq   #1,d7
-.free:
-        move.l  4.w,a6
-        move.l  a2,a1
-        move.l  #640,d0
-        jsr     -210(a6)
-        move.l  d7,d0
+        moveq   #1,d0
         rts
 .alloc_fail:
         moveq   #2,d0
