@@ -34,10 +34,10 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Diagnostic correction: line mode performs its own word step.
-        ; With CMOD/DMOD=38 the effective raster stride should be 40 bytes.
+        ; Centered diagnostic: probe the previous raster row safely.
+        ; If this is nonzero the BLTCON1 octant is stepping upward.
         lea     120(a2),a3
-        adda.w  #40,a3
+        suba.w  #40,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
