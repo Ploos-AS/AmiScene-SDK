@@ -34,9 +34,11 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Probe the second word of row 1.  A line-mode pointer/modulo
-        ; error can place the expected pixels at +2 instead of the row base.
-        move.w  2(a3),d0
+        ; Probe row 2 at the base word.  Row 1 base and +2 are both zero;
+        ; this determines whether the line advances by a different vertical
+        ; cadence rather than a horizontal word offset.
+        adda.w  #40,a3
+        move.w  (a3),d0
         ori.w   #$8000,d0
         rts
 .mismatch:
