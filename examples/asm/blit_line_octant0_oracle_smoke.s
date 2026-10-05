@@ -34,11 +34,10 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Probe row 1 using a 42-byte effective stride.  In line mode the
-        ; C/D pointer update combines word stepping with the modulo; if 40
-        ; was treated as a full raster stride, the effective move can be 42.
+        ; Diagnostic correction: line mode performs its own word step.
+        ; With CMOD/DMOD=38 the effective raster stride should be 40 bytes.
         move.l  a2,a3
-        adda.w  #42,a3
+        adda.w  #40,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
@@ -51,6 +50,6 @@ Start:
 
         even
 LineDesc:
-        dc.w    $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w    $0b4a,$0059,$ffff,$ffff,-20,12,38,38,-4,$8000,$ffff,$0242
 Expected:
         dc.w    $c000,$3000,$0e00,$0180,0,0,0,0,0
