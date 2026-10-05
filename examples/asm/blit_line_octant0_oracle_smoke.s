@@ -34,11 +34,11 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Probe row 2 at the base word.  Row 1 base and +2 are both zero;
-        ; this determines whether the line advances by a different vertical
-        ; cadence rather than a horizontal word offset.
-        adda.w  #40,a3
-        move.w  (a3),d0
+        ; Probe the word immediately following row 0.  Rows 1 and 2 at
+        ; +40-byte stride are zero, so test whether line mode is advancing
+        ; C/D by words rather than by the assumed raster stride.
+        move.l  a2,a3
+        move.w  2(a3),d0
         ori.w   #$8000,d0
         rts
 .mismatch:
