@@ -34,10 +34,10 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Centered diagnostic: probe the previous raster row safely.
-        ; If this is nonzero the BLTCON1 octant is stepping upward.
+        ; Reverse raster was zero too. Probe the next word on the start
+        ; raster to detect horizontal pointer stepping.
         lea     120(a2),a3
-        suba.w  #40,a3
+        adda.w  #2,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
