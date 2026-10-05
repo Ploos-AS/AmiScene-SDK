@@ -34,10 +34,9 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Encode the full actual row-1 word in the guest RC.  Bit 15 is
-        ; forced so zero remains distinguishable from success; amiga-runtime
-        ; normalizes the AmigaDOS shell value back to an unsigned 16-bit word.
-        move.w  (a3),d0
+        ; Probe the second word of row 1.  A line-mode pointer/modulo
+        ; error can place the expected pixels at +2 instead of the row base.
+        move.w  2(a3),d0
         ori.w   #$8000,d0
         rts
 .mismatch:
