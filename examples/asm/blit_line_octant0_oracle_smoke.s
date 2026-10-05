@@ -34,11 +34,11 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Rows +2, +40 and +80 are all zero.  Probe the previous raster
-        ; row: line mode may be stepping C/D in the opposite vertical
-        ; direction for this BLTCON1 octant encoding.
+        ; Probe row 1 using a 42-byte effective stride.  In line mode the
+        ; C/D pointer update combines word stepping with the modulo; if 40
+        ; was treated as a full raster stride, the effective move can be 42.
         move.l  a2,a3
-        suba.w  #40,a3
+        adda.w  #42,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
