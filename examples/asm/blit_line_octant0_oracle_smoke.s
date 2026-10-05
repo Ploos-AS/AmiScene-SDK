@@ -34,10 +34,10 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; +/-40 and +2 were zero. Probe previous word on the start raster
-        ; to detect horizontal stepping in the opposite direction.
+        ; Immediate horizontal and vertical neighbours were zero. Probe
+        ; the first diagonal candidate to localise C/D pointer movement.
         lea     120(a2),a3
-        suba.w  #2,a3
+        adda.w  #42,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
