@@ -34,9 +34,13 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Return the actual row-1 word with a marker for CI diagnostics.
+        ; Diagnostic mode: PROBE selects a safe word offset relative to
+        ; the centred line start. Return its value with bit 15 as marker.
+        ifnd PROBE
+PROBE   equ 40
+        endif
         lea     120(a2),a3
-        adda.w  #40,a3
+        adda.w  #PROBE,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
