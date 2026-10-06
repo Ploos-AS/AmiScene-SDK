@@ -14,8 +14,10 @@ BLIT_OCTANT0_ALLOC_SMOKE_OUT ?= build/amiscene-blit-line-octant0-alloc-smoke
 BLIT_OCTANT0_ORACLE_SMOKE_OUT ?= build/amiscene-blit-line-octant0-oracle-smoke
 BLIT_OCTANTS_OUT ?= build/amiscene-blit-line-octants-qualify
 BLIT_OCTANT_OUTS := $(foreach n,0 1 2 3 4 5 6 7,build/amiscene-blit-line-octant-$(n)-qualify)
+BLIT_PROBE_OFFSETS := m42 m40 m38 m2 p2 p38 p40 p42 p78 p80 p82
+BLIT_PROBE_OUTS := $(foreach n,$(BLIT_PROBE_OFFSETS),build/amiscene-blit-line-probe-$(n))
 
-all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS)
+all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
 
 build/copper_minimal.o: copper_minimal.s ../../include/amiscene/ocs.i
 	mkdir -p build
@@ -48,6 +50,14 @@ build/blit_line_octant0_alloc_smoke.o: blit_line_octant0_alloc_smoke.s ../../inc
 build/blit_line_octant0_oracle_smoke.o: blit_line_octant0_oracle_smoke.s ../../include/amiscene/ocs.i
 	mkdir -p build
 	$(VASM) $(VASMFLAGS) -o $@ $<
+
+build/blit_line_probe_m%.o: blit_line_octant0_oracle_smoke.s ../../include/amiscene/ocs.i
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -DPROBE=-$* -o $@ $<
+
+build/blit_line_probe_p%.o: blit_line_octant0_oracle_smoke.s ../../include/amiscene/ocs.i
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -DPROBE=$* -o $@ $<
 
 build/blit_line_octants_qualify.o: blit_line_octants_qualify.s ../../include/amiscene/ocs.i
 	mkdir -p build
@@ -87,6 +97,12 @@ $(BLIT_OCTANT0_ALLOC_SMOKE_OUT): build/blit_line_octant0_alloc_smoke.o build/bli
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 $(BLIT_OCTANT0_ORACLE_SMOKE_OUT): build/blit_line_octant0_oracle_smoke.o build/blit_runtime.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
+
+build/amiscene-blit-line-probe-m%: build/blit_line_probe_m%.o build/blit_runtime.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
+
+build/amiscene-blit-line-probe-p%: build/blit_line_probe_p%.o build/blit_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 $(BLIT_OCTANTS_OUT): build/blit_line_octants_qualify.o build/blit_runtime.o
