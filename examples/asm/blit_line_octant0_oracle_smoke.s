@@ -17,7 +17,7 @@ Start:
         lea     LineDesc(pc),a0
         lea     120(a2),a3
         move.l  a3,a4
-        bsr     AmiBlitLineStart
+        bsr     LineStartLowAPT
         bsr     AmiBlitWait
 
         ; Row 0 compare and row 1 access are known-good.  Compare row 1
@@ -45,6 +45,26 @@ Start:
         rts
 .alloc_fail:
         moveq   #2,d0
+        rts
+
+; Diagnostic line start: identical register setup, but write only
+; BLTAPTL for the line error accumulator.
+LineStartLowAPT:
+        bsr     AmiBlitWait
+        move.w  (a0)+,BLTCON0(a6)
+        move.w  (a0)+,BLTCON1(a6)
+        move.w  (a0)+,BLTAFWM(a6)
+        move.w  (a0)+,BLTALWM(a6)
+        move.w  (a0)+,BLTAMOD(a6)
+        move.w  (a0)+,BLTBMOD(a6)
+        move.w  (a0)+,BLTCMOD(a6)
+        move.w  (a0)+,BLTDMOD(a6)
+        move.w  (a0)+,BLTAPTL(a6)
+        move.w  (a0)+,BLTADAT(a6)
+        move.w  (a0)+,BLTBDAT(a6)
+        move.l  a3,BLTCPTH(a6)
+        move.l  a4,BLTDPTH(a6)
+        move.w  (a0),BLTSIZE(a6)
         rts
 
         even
