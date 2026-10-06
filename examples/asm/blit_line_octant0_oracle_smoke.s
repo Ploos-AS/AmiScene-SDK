@@ -17,7 +17,7 @@ Start:
         lea     LineDesc(pc),a0
         lea     120(a2),a3
         move.l  a3,a4
-        bsr     LineStartLowAPT
+        bsr     AmiBlitLineStart
         bsr     AmiBlitWait
 
         ; Row 0 compare and row 1 access are known-good.  Compare row 1
@@ -69,6 +69,6 @@ LineStartLowAPT:
 
         even
 LineDesc:
-        dc.w    $0bfa,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w    $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
 Expected:
         dc.w    $c000,$3000,$0e00,$0180,0,0,0,0,0
