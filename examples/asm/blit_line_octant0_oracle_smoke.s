@@ -34,10 +34,11 @@ Start:
         moveq   #0,d0
         rts
 .row1_mismatch:
-        ; Immediate horizontal and vertical neighbours were zero. Probe
-        ; the first diagonal candidate to localise C/D pointer movement.
+        ; Probe the first expected continuation with line-mode SIGN clear.
+        ; This isolates whether the descriptor's initial SIGN bit is stale:
+        ; the accumulator itself already carries the signed error term.
         lea     120(a2),a3
-        adda.w  #42,a3
+        adda.w  #40,a3
         move.w  (a3),d0
         ori.w   #$8000,d0
         rts
@@ -50,6 +51,6 @@ Start:
 
         even
 LineDesc:
-        dc.w    $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w    $0b4a,$0019,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
 Expected:
         dc.w    $c000,$3000,$0e00,$0180,0,0,0,0,0
