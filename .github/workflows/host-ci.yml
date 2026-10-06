@@ -89,6 +89,7 @@ jobs:
           path: |
             examples/asm/build/amiscene-blit-line-octants-qualify
             examples/asm/build/amiscene-blit-line-octant-*-qualify
+            examples/asm/build/amiscene-blit-line-probe-*
           if-no-files-found: error
 
   amicopper-source-tests:
@@ -319,6 +320,50 @@ jobs:
         with:
           name: amiscene-m3-line-octant0-oracle-smoke-runtime-evidence
           path: m3-line-octant0-oracle-smoke-runtime-evidence/
+          if-no-files-found: warn
+
+
+  m3-line-probe-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        probe: [m42, m40, m38, m2, p2, p38, p40, p42, p78, p80, p82]
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-line-octants-hunk
+          path: m3-line-probe-hunk
+      - uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/amiga-runtime
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
+          path: amiga-runtime-src
+      - name: Build qualified amiga-runtime
+        run: docker build -t amiga-runtime:m3-line-probe amiga-runtime-src
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/m3-line-probe-runtime-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:m3-line-probe prepare-aros
+      - name: Execute line bitmap probe
+        run: |
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/m3-line-probe-hunk:/payload:ro" \
+            -v "$PWD/m3-line-probe-runtime-evidence:/work/evidence" \
+            amiga-runtime:m3-line-probe \
+            test-hunk /payload/amiscene-blit-line-probe-${{ matrix.probe }} --profile a1200-020-aros
+      - name: Upload line bitmap probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-probe-${{ matrix.probe }}-runtime-evidence
+          path: m3-line-probe-runtime-evidence/
           if-no-files-found: warn
 
   m3-line-octant0-alloc-smoke-runtime:
