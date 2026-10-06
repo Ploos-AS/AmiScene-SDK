@@ -49,6 +49,6 @@ Start:
 
         even
 LineDesc:
-        dc.w    $0b4a,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
+        dc.w    $0bca,$0059,$ffff,$ffff,-20,12,40,40,-4,$8000,$ffff,$0242
 Expected:
         dc.w    $c000,$3000,$0e00,$0180,0,0,0,0,0
