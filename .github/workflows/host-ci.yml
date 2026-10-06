@@ -329,7 +329,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        probe: [m42, m40, m38, m2, p2, p38, p40, p42, p78, p80, p82]
+        probe: ["m42", "m40", "m38", "m2", "p2", "p38", "p40", "p42", "p78", "p80", "p82"]
     permissions:
       contents: read
       packages: read
@@ -358,6 +358,11 @@ jobs:
             -v "$PWD/m3-line-probe-runtime-evidence:/work/evidence" \
             amiga-runtime:m3-line-probe \
             test-hunk /payload/amiscene-blit-line-probe-${{ matrix.probe }} --profile a1200-020-aros
+      - name: Report line bitmap probe result
+        if: always()
+        run: |
+          echo "probe=${{ matrix.probe }}"
+          cat m3-line-probe-runtime-evidence/result.json || true
       - name: Upload line bitmap probe evidence
         if: always()
         uses: actions/upload-artifact@v4
