@@ -14,6 +14,7 @@ Start:
         lea CUSTOM,a6
         lea Cases(pc),a5
         lea Starts(pc),a1
+        lea Strides(pc),a4
         lea Expected(pc),a0
         ifnd OCTANT
 OCTANT  equ -1
@@ -29,6 +30,9 @@ OCTANT  equ -1
         moveq #OCTANT,d4
         mulu #2,d4
         adda.l d4,a1
+        moveq #OCTANT,d4
+        mulu #2,d4
+        adda.l d4,a4
         moveq #OCTANT,d4
         mulu #18,d4
         adda.l d4,a0
@@ -56,15 +60,14 @@ OCTANT  equ -1
         bra.s .done
 .wait_done:
         move.l (sp)+,a0
-        ; The OCS line-mode SUD/SUL/AUL table used here advances this
-        ; octant toward lower raster addresses. Compare in that direction.
         lea 120(a2),a3
+        move.w (a4)+,d3       ; expected raster stride for this octant
         moveq #8,d5
 .row:
         move.w (a0)+,d0
         cmp.w (a3),d0
         bne.s .fail
-        suba.w #40,a3
+        adda.w d3,a3
         dbra d5,.row
         add.l #24,a5
         ifeq OCTANT+1
@@ -92,6 +95,10 @@ OCTANT  equ -1
 
 ; y1*40 offsets. x1 stays within the first word; BLTCON0 START handles x.
 Starts: dc.w 0,0,0,0,320,320,320,320
+
+; Expected memory raster direction per octant. Kept explicit so the
+; qualification does not accidentally impose one screen-Y convention.
+Strides: dc.w 40,40,40,-40,-40,-40,-40,-40
 
 ; major=8, minor=3: APT=-4, AMOD=-20, BMOD=12, size=(9<<6)|2.
 Cases:
