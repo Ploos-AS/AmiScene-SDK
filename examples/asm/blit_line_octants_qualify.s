@@ -39,12 +39,11 @@ OCTANT  equ -1
         moveq #OCTANT,d4
         endif
  .case:
-        move.w (a1)+,d6
-        move.w (a4)+,d6
-        move.w d6,-(sp)
+        move.w (a1)+,d6        ; bitmap start offset for this octant
+        move.w (a4)+,d3        ; expected raster stride
+        move.w d3,-(sp)
         lea 120(a2),a3
-        adda.w (a1),a3
-        subq.l #2,a1
+        adda.w d6,a3
         move.l a3,a4
         move.l a0,-(sp)
         move.l a5,a0
