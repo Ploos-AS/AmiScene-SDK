@@ -14,7 +14,7 @@ BLIT_OCTANT0_ALLOC_SMOKE_OUT ?= build/amiscene-blit-line-octant0-alloc-smoke
 BLIT_OCTANT0_ORACLE_SMOKE_OUT ?= build/amiscene-blit-line-octant0-oracle-smoke
 BLIT_OCTANTS_OUT ?= build/amiscene-blit-line-octants-qualify
 BLIT_OCTANT_OUTS := $(foreach n,0 1 2 3 4 5 6 7,build/amiscene-blit-line-octant-$(n)-qualify)
-BLIT_PROBE_OFFSETS := m42 m40 m38 m2 p2 p38 p40 p42 p78 p80 p82
+BLIT_PROBE_OFFSETS := m82 m80 m78 m42 m40 m38 m2 p2 p38 p40 p42 p78 p80 p82
 BLIT_PROBE_OUTS := $(foreach n,$(BLIT_PROBE_OFFSETS),build/amiscene-blit-line-probe-$(n))
 
 all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
