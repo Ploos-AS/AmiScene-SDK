@@ -56,13 +56,15 @@ OCTANT  equ -1
         bra.s .done
 .wait_done:
         move.l (sp)+,a0
+        ; The OCS line-mode SUD/SUL/AUL table used here advances this
+        ; octant toward lower raster addresses. Compare in that direction.
         lea 120(a2),a3
         moveq #8,d5
 .row:
         move.w (a0)+,d0
         cmp.w (a3),d0
         bne.s .fail
-        adda.w #40,a3
+        suba.w #40,a3
         dbra d5,.row
         add.l #24,a5
         ifeq OCTANT+1
