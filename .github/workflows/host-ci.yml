@@ -329,7 +329,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        probe: ["m42", "m40", "m38", "m2", "p2", "p38", "p40", "p42", "p78", "p80", "p82"]
+        probe: ["m82", "m80", "m78", "m42", "m40", "m38", "m2", "p2", "p38", "p40", "p42", "p78", "p80", "p82"]
     permissions:
       contents: read
       packages: read
