@@ -44,9 +44,10 @@ OCTANT  equ -1
         move.w d3,-(sp)
         lea 120(a2),a3
         adda.w d6,a3
-        move.l a3,a4
+        move.l a3,-(sp)       ; preserve D pointer without clobbering stride table
         move.l a0,-(sp)
         move.l a5,a0
+        move.l 4(sp),a4        ; AmiBlitLineStart D pointer
         bsr AmiBlitLineStart
         ; Bounded wait: never let a bad line-mode octant hang CI forever.
         ; Return 0x40+octant (64..71) when Blitter BUSY does not clear.
@@ -60,8 +61,9 @@ OCTANT  equ -1
         move.w d4,d7
         add.w #$40,d7
         bra.s .done
-.wait_done:
+ .wait_done:
         move.l (sp)+,a0
+        addq.l #4,sp           ; discard saved D pointer
         lea 120(a2),a3
         move.w (sp)+,d3       ; expected raster stride for this octant
         moveq #8,d5
