@@ -14,7 +14,7 @@ Start:
         lea CUSTOM,a6
         lea Cases(pc),a5
         lea Starts(pc),a1
-        lea Strides(pc),a6
+        lea Strides(pc),a4
         lea Expected(pc),a0
         ifnd OCTANT
 OCTANT  equ -1
@@ -32,16 +32,19 @@ OCTANT  equ -1
         adda.l d4,a1
         moveq #OCTANT,d4
         mulu #2,d4
-        adda.l d4,a6
+        adda.l d4,a4
         moveq #OCTANT,d4
         mulu #18,d4
         adda.l d4,a0
         moveq #OCTANT,d4
         endif
-.case:
+ .case:
         move.w (a1)+,d6
+        move.w (a4)+,d6
+        move.w d6,-(sp)
         lea 120(a2),a3
-        adda.w d6,a3
+        adda.w (a1),a3
+        subq.l #2,a1
         move.l a3,a4
         move.l a0,-(sp)
         move.l a5,a0
@@ -61,7 +64,7 @@ OCTANT  equ -1
 .wait_done:
         move.l (sp)+,a0
         lea 120(a2),a3
-        move.w (a6)+,d3       ; expected raster stride for this octant
+        move.w (sp)+,d3       ; expected raster stride for this octant
         moveq #8,d5
 .row:
         move.w (a0)+,d0
