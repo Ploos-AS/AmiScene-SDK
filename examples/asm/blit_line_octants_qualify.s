@@ -10,11 +10,9 @@ Start:
         tst.l d0
         beq .alloc_fail
         move.l d0,a2
-        move.l d0,a4            ; preserve allocation base across qualification
         lea CUSTOM,a6
         lea Cases(pc),a5
         lea Starts(pc),a1
-        lea Strides(pc),a4
         lea Expected(pc),a0
         ifnd OCTANT
 OCTANT  equ -1
@@ -31,23 +29,21 @@ OCTANT  equ -1
         mulu #2,d4
         adda.l d4,a1
         moveq #OCTANT,d4
-        mulu #2,d4
-        adda.l d4,a4
-        moveq #OCTANT,d4
         mulu #18,d4
         adda.l d4,a0
         moveq #OCTANT,d4
         endif
  .case:
         move.w (a1)+,d6        ; bitmap start offset for this octant
-        move.w (a4)+,d3        ; expected raster stride
+        move.w d4,d3
+        add.w d3,d3
+        move.w Strides(pc,d3.w),d3  ; index by octant, not mutable cursor
         move.w d3,-(sp)
         lea 120(a2),a3
         adda.w d6,a3
-        move.l a3,-(sp)       ; preserve D pointer without clobbering stride table
+        move.l a3,a4           ; AmiBlitLineStart D pointer
         move.l a0,-(sp)
         move.l a5,a0
-        move.l 4(sp),a4        ; AmiBlitLineStart D pointer
         bsr AmiBlitLineStart
         ; Bounded wait: never let a bad line-mode octant hang CI forever.
         ; Return 0x40+octant (64..71) when Blitter BUSY does not clear.
@@ -63,7 +59,6 @@ OCTANT  equ -1
         bra.s .done
  .wait_done:
         move.l (sp)+,a0
-        addq.l #4,sp           ; discard saved D pointer
         lea 120(a2),a3
         move.w (sp)+,d3       ; expected raster stride for this octant
         moveq #8,d5
