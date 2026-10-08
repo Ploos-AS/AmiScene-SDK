@@ -89,6 +89,13 @@ OCTANT  equ -1
         move.l (sp)+,a0
         lea 120(a2),a3
         move.w (sp)+,d3       ; expected raster stride for this octant
+        ifeq STAGE-4
+        ; Stage 4: exercise raster read without the expected-value
+        ; comparison. Return normally to isolate the oracle branch.
+        move.w (a3),d0
+        moveq #0,d7
+        bra .done
+        endif
         moveq #8,d5
 .row:
         move.w (a0)+,d0
