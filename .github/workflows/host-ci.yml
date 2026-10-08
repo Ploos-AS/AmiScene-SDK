@@ -40,6 +40,14 @@ jobs:
             amiga-build
       - name: Inspect m68k artifacts
         run: test -s examples/asm/build/amiscene-copper && test -s examples/asm/build/amiscene-copper-qualify && test -s examples/asm/build/amiscene-blit-qualify && test -s examples/asm/build/amiscene-blit-fill-qualify && test -s examples/asm/build/amiscene-blit-line-qualify && test -s examples/asm/build/amiscene-blit-line-octants-qualify
+      - name: Verify minimal Hunk control exists
+        run: test -s examples/asm/build/amiscene-hunk-return-smoke
+      - name: Upload minimal Hunk control
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-hunk-return-smoke
+          path: examples/asm/build/amiscene-hunk-return-smoke
+          if-no-files-found: error
       - name: Upload M2 qualification Hunk
         uses: actions/upload-artifact@v4
         with:
@@ -117,6 +125,46 @@ jobs:
           name: amicopper-native-hunk
           path: amiga/amicopper/build/AmiCopper
           if-no-files-found: error
+
+  hunk-return-runtime:
+    needs: m68k-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-hunk-return-smoke
+          path: hunk-return-smoke
+      - uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/amiga-runtime
+          ref: efa084177768e652f8ff1f43890415ee6bd64608
+          path: amiga-runtime-src
+      - name: Build qualified amiga-runtime
+        run: docker build -t amiga-runtime:hunk-return amiga-runtime-src
+      - name: Prepare AROS m68k runtime
+        run: |
+          mkdir -p "$PWD/aros-cache" "$PWD/hunk-return-evidence"
+          docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:hunk-return prepare-aros
+      - name: Execute minimal Hunk return control
+        run: |
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/hunk-return-smoke:/payload:ro" \
+            -v "$PWD/hunk-return-evidence:/work/evidence" \
+            amiga-runtime:hunk-return \
+            test-hunk /payload/amiscene-hunk-return-smoke --profile a1200-020-aros
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 0' hunk-return-evidence/result.json
+      - name: Upload minimal Hunk runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-hunk-return-runtime-evidence
+          path: hunk-return-evidence/
+          if-no-files-found: warn
 
   m2-runtime:
     needs: m68k-build
