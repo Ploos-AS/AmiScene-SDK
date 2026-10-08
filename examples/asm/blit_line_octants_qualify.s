@@ -108,7 +108,18 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
-        moveq #8,d5
+        ; ROW_LIMIT is an optional diagnostic bound (1..9).  A successful
+        ; bounded run verifies the prefix without claiming full qualification.
+        ifnd ROW_LIMIT
+ROW_LIMIT equ 9
+        endif
+        iflt ROW_LIMIT-1
+        fail "ROW_LIMIT must be between 1 and 9"
+        endif
+        ifgt ROW_LIMIT-9
+        fail "ROW_LIMIT must be between 1 and 9"
+        endif
+        moveq #ROW_LIMIT-1,d5
 .row:
         move.w (a0)+,d0
         cmp.w (a3),d0
