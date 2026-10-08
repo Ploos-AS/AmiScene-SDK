@@ -56,6 +56,14 @@ OCTANT  equ -1
         bra .done
         endif
         bsr AmiBlitLineStart
+        ifeq STAGE-2
+        ; Stage 2: issue the Blitter command and return without polling
+        ; BUSY or comparing raster words. This isolates the start call.
+        move.l (sp)+,a0
+        addq.l #2,sp
+        moveq #0,d7
+        bra .done
+        endif
         ; Bounded wait: never let a bad line-mode octant hang CI forever.
         ; Return 0x40+octant (64..71) when Blitter BUSY does not clear.
         move.l #$00100000,d3
