@@ -54,6 +54,7 @@ OCTANT  equ -1
         subq.l #1,d3
         bne.s .wait
         move.l (sp)+,a0
+        addq.l #2,sp           ; discard saved stride on timeout
         move.w d4,d7
         add.w #$40,d7
         bra.s .done
@@ -76,8 +77,13 @@ OCTANT  equ -1
         endif
         moveq #0,d7
         bra.s .done
-.fail:  move.w d4,d7
-        addq.w #1,d7           ; return 1..8 = failing octant
+.fail:  ; Encode first mismatching raster row as $100 + octant*16 + row.
+        ; Distinct from BUSY timeout ($40..$47) and successful RC=0.
+        move.w d4,d7
+        lsl.w #4,d7
+        add.w #9,d7
+        sub.w d5,d7
+        add.w #$100,d7
 .done:
         move.l 4.w,a6
         move.l a2,a1            ; allocation base
