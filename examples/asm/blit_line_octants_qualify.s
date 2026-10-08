@@ -2,6 +2,9 @@
         include "amiscene/ocs.i"
         xref AmiBlitLineStart
         xref AmiBlitWait
+        ifnd STAGE
+STAGE   equ 0
+        endif
 Start:
         move.l 4.w,a6
         move.l #4800,d0
@@ -44,6 +47,14 @@ OCTANT  equ -1
         move.l a3,a4           ; AmiBlitLineStart D pointer
         move.l a0,-(sp)
         move.l a5,a0
+        ifeq STAGE-1
+        ; Pre-Blitter stage probe: return normally after setup, without
+        ; touching the custom-chip registers or invoking the Blitter.
+        move.l (sp)+,a0
+        addq.l #2,sp
+        moveq #0,d7
+        bra .done
+        endif
         bsr AmiBlitLineStart
         ; Bounded wait: never let a bad line-mode octant hang CI forever.
         ; Return 0x40+octant (64..71) when Blitter BUSY does not clear.
