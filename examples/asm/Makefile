@@ -6,6 +6,7 @@ VASMFLAGS ?= -m68000 -Fhunk -I../../include
 VLINKFLAGS ?= -bamigahunk -Bstatic
 OUT ?= build/amiscene-copper
 QUALIFY_OUT ?= build/amiscene-copper-qualify
+HUNK_RETURN_OUT ?= build/amiscene-hunk-return-smoke
 BLIT_OUT ?= build/amiscene-blit-qualify
 BLIT_FILL_OUT ?= build/amiscene-blit-fill-qualify
 BLIT_LINE_OUT ?= build/amiscene-blit-line-qualify
@@ -17,7 +18,14 @@ BLIT_OCTANT_OUTS := $(foreach n,0 1 2 3 4 5 6 7,build/amiscene-blit-line-octant-
 BLIT_PROBE_OFFSETS := m82 m80 m78 m42 m40 m38 m2 p2 p38 p40 p42 p78 p80 p82
 BLIT_PROBE_OUTS := $(foreach n,$(BLIT_PROBE_OFFSETS),build/amiscene-blit-line-probe-$(n))
 
-all: $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
+all: $(HUNK_RETURN_OUT) $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
+
+build/hunk_return_smoke.o: hunk_return_smoke.s
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -o $@ $<
+
+$(HUNK_RETURN_OUT): build/hunk_return_smoke.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 build/copper_minimal.o: copper_minimal.s ../../include/amiscene/ocs.i
 	mkdir -p build
