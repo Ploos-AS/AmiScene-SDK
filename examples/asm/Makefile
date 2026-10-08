@@ -14,12 +14,13 @@ BLIT_OCTANT0_SMOKE_OUT ?= build/amiscene-blit-line-octant0-smoke
 BLIT_OCTANT0_ALLOC_SMOKE_OUT ?= build/amiscene-blit-line-octant0-alloc-smoke
 BLIT_OCTANT0_ORACLE_SMOKE_OUT ?= build/amiscene-blit-line-octant0-oracle-smoke
 BLIT_STAGE_OUT ?= build/amiscene-blit-line-stage-3
+BLIT_STAGE2_OUT ?= build/amiscene-blit-line-stage2-3
 BLIT_OCTANTS_OUT ?= build/amiscene-blit-line-octants-qualify
 BLIT_OCTANT_OUTS := $(foreach n,0 1 2 3 4 5 6 7,build/amiscene-blit-line-octant-$(n)-qualify)
 BLIT_PROBE_OFFSETS := m82 m80 m78 m42 m40 m38 m2 p2 p38 p40 p42 p78 p80 p82
 BLIT_PROBE_OUTS := $(foreach n,$(BLIT_PROBE_OFFSETS),build/amiscene-blit-line-probe-$(n))
 
-all: $(HUNK_RETURN_OUT) $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_STAGE_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
+all: $(HUNK_RETURN_OUT) $(OUT) $(QUALIFY_OUT) $(BLIT_OUT) $(BLIT_FILL_OUT) $(BLIT_LINE_OUT) $(BLIT_OCTANT0_SMOKE_OUT) $(BLIT_OCTANT0_ALLOC_SMOKE_OUT) $(BLIT_OCTANT0_ORACLE_SMOKE_OUT) $(BLIT_STAGE_OUT) $(BLIT_STAGE2_OUT) $(BLIT_OCTANTS_OUT) $(BLIT_OCTANT_OUTS) $(BLIT_PROBE_OUTS)
 
 build/hunk_return_smoke.o: hunk_return_smoke.s
 	mkdir -p build
@@ -73,6 +74,13 @@ build/blit_line_stage_3.o: blit_line_octants_qualify.s ../../include/amiscene/oc
 	$(VASM) $(VASMFLAGS) -DOCTANT=3 -DSTAGE=1 -o $@ $<
 
 $(BLIT_STAGE_OUT): build/blit_line_stage_3.o build/blit_runtime.o
+	$(VLINK) $(VLINKFLAGS) -o $@ $^
+
+build/blit_line_stage2_3.o: blit_line_octants_qualify.s ../../include/amiscene/ocs.i
+	mkdir -p build
+	$(VASM) $(VASMFLAGS) -DOCTANT=3 -DSTAGE=2 -o $@ $<
+
+$(BLIT_STAGE2_OUT): build/blit_line_stage2_3.o build/blit_runtime.o
 	$(VLINK) $(VLINKFLAGS) -o $@ $^
 
 build/blit_line_octants_qualify.o: blit_line_octants_qualify.s ../../include/amiscene/ocs.i
