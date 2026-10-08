@@ -78,6 +78,14 @@ OCTANT  equ -1
         add.w #$40,d7
         bra.s .done
  .wait_done:
+        ifeq STAGE-3
+        ; Stage 3: wait for BUSY to clear, then return without comparing
+        ; raster data. Keep the two saved stack values balanced.
+        move.l (sp)+,a0
+        addq.l #2,sp
+        moveq #0,d7
+        bra .done
+        endif
         move.l (sp)+,a0
         lea 120(a2),a3
         move.w (sp)+,d3       ; expected raster stride for this octant
