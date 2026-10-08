@@ -88,7 +88,12 @@ OCTANT  equ -1
         move.l 4.w,a6
         move.l a2,a1            ; allocation base
         ifeq OCTANT+1
-        sub.l #4200,a1          ; all-octants mode advanced a2 seven times
+        ; a2 advances 600 bytes per *completed* octant, not always 4200.
+        ; d4 is the number completed on success or the failing index.
+        moveq #0,d0
+        move.w d4,d0
+        mulu #600,d0
+        sub.l d0,a1
         endif
         move.l #4800,d0
         jsr -210(a6)            ; Exec FreeMem(address,size)
