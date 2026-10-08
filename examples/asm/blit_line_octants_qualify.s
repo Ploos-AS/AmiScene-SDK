@@ -96,6 +96,18 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-5
+        ; Compare only row zero, then return without entering
+        ; the nine-row oracle loop.
+        move.w (a0),d0
+        cmp.w (a3),d0
+        beq.s .stage5_pass
+        moveq #1,d7
+        bra .done
+.stage5_pass:
+        moveq #0,d7
+        bra .done
+        endif
         moveq #8,d5
 .row:
         move.w (a0)+,d0
