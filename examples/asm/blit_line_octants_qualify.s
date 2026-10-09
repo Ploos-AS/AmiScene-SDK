@@ -117,6 +117,14 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-8
+        ; Return the actual second-row raster word as the guest RC.
+        ; Used only as a diagnostic; zero is a legitimate observed word.
+        adda.w d3,a3
+        moveq #0,d7
+        move.w (a3),d7
+        bra .done
+        endif
         ifeq STAGE-7
         ; Stage 7: compare the second raster word directly without DBRA.
         ; This isolates the comparison from the loop's branch/counter.
