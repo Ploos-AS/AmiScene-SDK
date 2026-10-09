@@ -119,6 +119,9 @@ ROW_LIMIT equ 9
         ifgt ROW_LIMIT-9
         fail "ROW_LIMIT must be between 1 and 9"
         endif
+        ; For the all-octants case ROW_LIMIT is a diagnostic prefix only.
+        ; The expected-value pointer must still advance by all nine words
+        ; before moving to the next octant, regardless of the prefix length.
         moveq #ROW_LIMIT-1,d5
 .row:
         move.w (a0)+,d0
@@ -128,6 +131,9 @@ ROW_LIMIT equ 9
         dbra d5,.row
         add.l #24,a5
         ifeq OCTANT+1
+        iflt ROW_LIMIT-9
+        adda.w #2*(9-ROW_LIMIT),a0
+        endif
         add.l #600,a2
         addq.w #1,d4
         dbra d7,.case
