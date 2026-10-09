@@ -138,7 +138,7 @@ ROW_LIMIT equ 9
         ; Distinct from BUSY timeout ($40..$47) and successful RC=0.
         move.w d4,d7
         lsl.w #4,d7
-        add.w #9,d7
+        add.w #ROW_LIMIT,d7
         sub.w d5,d7
         add.w #$100,d7
 .done:
