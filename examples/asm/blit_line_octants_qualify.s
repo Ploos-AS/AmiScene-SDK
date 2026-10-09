@@ -117,6 +117,20 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-7
+        ; Stage 7: compare the second raster word directly without DBRA.
+        ; This isolates the comparison from the loop's branch/counter.
+        adda.w d3,a3
+        addq.l #2,a0
+        move.w (a0),d0
+        cmp.w (a3),d0
+        beq.s .stage7_pass
+        moveq #2,d7
+        bra .done
+.stage7_pass:
+        moveq #0,d7
+        bra .done
+        endif
         ; ROW_LIMIT is an optional diagnostic bound (1..9).  A successful
         ; bounded run verifies the prefix without claiming full qualification.
         ifnd ROW_LIMIT
