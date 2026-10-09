@@ -108,6 +108,15 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-6
+        ; Stage 6: read the second raster word using the normal stride,
+        ; without entering the DBRA loop or comparing against the oracle.
+        ; This separates a second-row memory access from oracle control flow.
+        adda.w d3,a3
+        move.w (a3),d0
+        moveq #0,d7
+        bra .done
+        endif
         ; ROW_LIMIT is an optional diagnostic bound (1..9).  A successful
         ; bounded run verifies the prefix without claiming full qualification.
         ifnd ROW_LIMIT
