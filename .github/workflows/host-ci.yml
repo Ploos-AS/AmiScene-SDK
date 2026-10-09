@@ -850,7 +850,10 @@ jobs:
           ref: efa084177768e652f8ff1f43890415ee6bd64608
           path: amiga-runtime-src
       - name: Build qualified amiga-runtime
-        run: docker build -t amiga-runtime:stage8 amiga-runtime-src
+        run: |
+          # Use the public ECR mirror to avoid Docker Hub anonymous pull limits.
+          sed -i 's|^FROM debian:13-slim$|FROM public.ecr.aws/docker/library/debian:13-slim|' amiga-runtime-src/Dockerfile
+          docker build -t amiga-runtime:stage8 amiga-runtime-src
       - name: Prepare AROS m68k runtime
         run: |
           mkdir -p "$PWD/aros-cache" "$PWD/stage8-evidence"
