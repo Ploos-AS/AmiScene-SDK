@@ -118,11 +118,19 @@ OCTANT  equ -1
         bra .done
         endif
         ifeq STAGE-8
-        ; Return the actual second-row raster word as the guest RC.
-        ; Used only as a diagnostic; zero is a legitimate observed word.
+        ; Return a bounded diagnostic: the number of set bits in the
+        ; second-row raster word (0..16). Avoid passing arbitrary 16-bit
+        ; values through the AROS shell's process return-code contract.
         adda.w d3,a3
+        move.w (a3),d0
         moveq #0,d7
-        move.w (a3),d7
+        moveq #15,d6
+.stage8_popcount:
+        lsr.w #1,d0
+        bcc.s .stage8_next
+        addq.w #1,d7
+.stage8_next:
+        dbra d6,.stage8_popcount
         bra .done
         endif
         ifeq STAGE-7
