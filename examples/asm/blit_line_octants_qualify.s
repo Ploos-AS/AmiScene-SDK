@@ -133,6 +133,26 @@ OCTANT  equ -1
         dbra d6,.stage8_popcount
         bra .done
         endif
+        ifeq STAGE-10
+        ; Probe second set-bit position, MSB-first (0..15).
+        ; Return 16 when fewer than two bits are set.
+        adda.w d3,a3
+        move.w (a3),d0
+        moveq #0,d7
+        moveq #0,d6
+.stage10_scan:
+        btst #15,d0
+        beq.s .stage10_next
+        addq.w #1,d6
+        cmpi.w #2,d6
+        beq.s .done
+.stage10_next:
+        lsl.w #1,d0
+        addq.w #1,d7
+        cmpi.w #16,d7
+        bne.s .stage10_scan
+        bra .done
+        endif
         ifeq STAGE-9
         ; Return the index of the first set bit in raster row 2 (0..15).
         ; Index 0 is the most significant bit. 16 denotes an empty word.
