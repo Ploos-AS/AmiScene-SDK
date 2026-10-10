@@ -133,6 +133,21 @@ OCTANT  equ -1
         dbra d6,.stage8_popcount
         bra .done
         endif
+        ifeq STAGE-9
+        ; Return the index of the first set bit in raster row 2 (0..15).
+        ; Index 0 is the most significant bit. 16 denotes an empty word.
+        adda.w d3,a3
+        move.w (a3),d0
+        moveq #0,d7
+.stage9_scan:
+        btst #15,d0
+        bne.s .done
+        lsl.w #1,d0
+        addq.w #1,d7
+        cmpi.w #16,d7
+        bne.s .stage9_scan
+        bra .done
+        endif
         ifeq STAGE-7
         ; Stage 7: compare the second raster word directly without DBRA.
         ; This isolates the comparison from the loop's branch/counter.
