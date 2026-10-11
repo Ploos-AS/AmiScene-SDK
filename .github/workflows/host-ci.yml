@@ -879,7 +879,8 @@ jobs:
             -v "$PWD/stage8-evidence:/work/evidence" \
             amiga-runtime:stage8 \
             test-hunk /payload/amiscene-blit-line-stage8-3 --profile a1200-020-aros
-          jq -e '.status == "PASS" and .guest_payload_executed == true and (.guest_rc | type == "number")' stage8-evidence/result.json
+          # Diagnostic regression only: observed faulty raster, NOT pixel-exact qualification.
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 2' stage8-evidence/result.json
       - name: Upload Second-row value probe evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -922,7 +923,8 @@ jobs:
             -v "$PWD/stage9-evidence:/work/evidence" \
             amiga-runtime:stage9 \
             test-hunk /payload/amiscene-blit-line-stage9-3 --profile a1200-020-aros
-          jq -e '.status == "PASS" and .guest_payload_executed == true and (.guest_rc | type == "number")' stage9-evidence/result.json
+          # Diagnostic regression only: observed faulty raster, NOT pixel-exact qualification.
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 4' stage9-evidence/result.json
       - name: Upload Second-row leading-pixel probe evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -965,7 +967,8 @@ jobs:
             -v "$PWD/stage10-evidence:/work/evidence" \
             amiga-runtime:stage10 \
             test-hunk /payload/amiscene-blit-line-stage10-3 --profile a1200-020-aros
-          jq -e '.status == "PASS" and .guest_payload_executed == true and (.guest_rc | type == "number")' stage10-evidence/result.json
+          # Diagnostic regression only: observed faulty raster, NOT pixel-exact qualification.
+          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 8' stage10-evidence/result.json
       - name: Upload Second-row second-pixel probe evidence
         if: always()
         uses: actions/upload-artifact@v4
