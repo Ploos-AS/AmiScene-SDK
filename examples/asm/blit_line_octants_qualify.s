@@ -55,6 +55,19 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ; Guard against reading an unchanged bitmap when the OS has not
+        ; enabled both master DMA (bit 9) and Blitter DMA (bit 6).
+        ; A successful BUSY poll alone cannot prove the blit was issued.
+        move.w DMACONR(a6),d0
+        andi.w #$0240,d0
+        cmpi.w #$0240,d0
+        beq.s .dma_ready
+        move.l (sp)+,a0
+        addq.l #2,sp
+        moveq #0,d7
+        move.w #$72,d7        ; DMA not enabled; distinct from raster mismatch
+        bra .done
+.dma_ready:
         bsr AmiBlitLineStart
         ifeq STAGE-2
         ; Stage 2: issue the Blitter command and return without polling
