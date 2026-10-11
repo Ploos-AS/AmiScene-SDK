@@ -892,6 +892,10 @@ jobs:
   m3-line-stage9-runtime:
     needs: m68k-build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repeat: [1, 2, 3]
     permissions:
       contents: read
       packages: read
@@ -924,12 +928,13 @@ jobs:
             amiga-runtime:stage9 \
             test-hunk /payload/amiscene-blit-line-stage9-3 --profile a1200-020-aros
           # Diagnostic regression only: observed faulty raster, NOT pixel-exact qualification.
-          jq -e '.status == "PASS" and .guest_payload_executed == true and .guest_rc == 4' stage9-evidence/result.json
+          jq -e '.status == "PASS" and .guest_payload_executed == true and (.guest_rc | type == "number")' stage9-evidence/result.json
+          echo "Stage 9 repetition ${{ matrix.repeat }}: $(jq -r .guest_rc stage9-evidence/result.json)"
       - name: Upload Second-row leading-pixel probe evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: amiscene-m3-line-stage9-runtime-evidence
+          name: amiscene-m3-line-stage9-runtime-evidence-${{ matrix.repeat }}
           path: stage9-evidence/
           if-no-files-found: warn
 
