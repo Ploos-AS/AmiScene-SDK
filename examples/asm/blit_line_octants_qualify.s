@@ -55,6 +55,24 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-11
+        ; Report DMA enable bits independently of the Blitter operation.
+        ; Return 0: neither, 1: master only, 2: Blitter only, 3: both.
+        ; This distinguishes disabled DMA from a raster/line-mode error.
+        move.w DMACONR(a6),d0
+        moveq #0,d7
+        btst #9,d0
+        beq.s .stage11_blitter
+        addq.w #1,d7
+.stage11_blitter:
+        btst #6,d0
+        beq.s .stage11_done
+        addq.w #2,d7
+.stage11_done:
+        move.l (sp)+,a0
+        addq.l #2,sp
+        bra .done
+        endif
         ; Guard against reading an unchanged bitmap when the OS has not
         ; enabled both master DMA (bit 9) and Blitter DMA (bit 6).
         ; A successful BUSY poll alone cannot prove the blit was issued.
