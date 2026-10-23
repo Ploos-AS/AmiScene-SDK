@@ -1008,7 +1008,17 @@ jobs:
         run: |
           # Use the public ECR mirror to avoid Docker Hub anonymous pull limits.
           sed -i 's|^FROM debian:13-slim$|FROM public.ecr.aws/docker/library/debian:13-slim|' amiga-runtime-src/Dockerfile
-          docker build -t amiga-runtime:stage11 amiga-runtime-src
+          # Try independent registries: public ECR can also return HTTP 429.
+          built=0
+          for base in ghcr.io/debian/debian:trixie-slim debian:13-slim public.ecr.aws/docker/library/debian:13-slim; do
+            echo "Trying base image: $base"
+            sed -i "1s|^FROM .*|FROM $base|" amiga-runtime-src/Dockerfile
+            if docker build -t amiga-runtime:stage11 amiga-runtime-src; then
+              built=1
+              break
+            fi
+          done
+          test "$built" -eq 1
       - name: Prepare AROS m68k runtime
         run: |
           mkdir -p "$PWD/aros-cache" "$PWD/stage11-evidence"
