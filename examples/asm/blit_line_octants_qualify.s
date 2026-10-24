@@ -148,6 +148,39 @@ OCTANT  equ -1
         moveq #0,d7
         bra .done
         endif
+        ifeq STAGE-12
+        ; Atomic two-pixel signature from ONE raster word.
+        ; For exactly two bits return (first_index << 4) | second_index,
+        ; MSB-first.  $fe means a different pixel count.
+        ; Expected octant-3 row 2 ($0600) produces $56.
+        adda.w d3,a3
+        move.w (a3),d0
+        moveq #0,d6           ; number of set pixels
+        moveq #0,d7           ; packed positions
+        moveq #0,d3           ; MSB-first bit index
+.stage12_scan:
+        btst #15,d0
+        beq.s .stage12_next
+        addq.w #1,d6
+        cmpi.w #1,d6
+        bne.s .stage12_second
+        move.w d3,d7
+        lsl.w #4,d7
+        bra.s .stage12_next
+.stage12_second:
+        cmpi.w #2,d6
+        bne.s .stage12_next
+        or.w d3,d7
+.stage12_next:
+        lsl.w #1,d0
+        addq.w #1,d3
+        cmpi.w #16,d3
+        bne.s .stage12_scan
+        cmpi.w #2,d6
+        beq.s .done
+        move.w #$fe,d7
+        bra .done
+        endif
         ifeq STAGE-8
         ; Return a bounded diagnostic: the number of set bits in the
         ; second-row raster word (0..16). Avoid passing arbitrary 16-bit
