@@ -1052,6 +1052,10 @@ jobs:
   m3-line-stage12-runtime:
     needs: m68k-build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repeat: [1, 2, 3]
     permissions:
       contents: read
       packages: read
@@ -1087,20 +1091,20 @@ jobs:
       - name: Execute octant-3 atomic pixel-signature probe
         run: |
           docker run --rm \
-            -e AMIGA_RUNTIME_TIMEOUT=60 \
+            -e AMIGA_RUNTIME_TIMEOUT=120 \
             -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
             -v "$PWD/stage-hunk:/payload:ro" \
             -v "$PWD/stage12-evidence:/work/evidence" \
             amiga-runtime:stage12 \
             test-hunk /payload/amiscene-blit-line-stage12-3 --profile a1200-020-aros
-          # Diagnostic regression only: observed faulty raster, NOT pixel-exact qualification.
+          # Diagnostic signature only; not a pixel-exact qualification.
           jq -e '.status == "PASS" and .guest_payload_executed == true and (.guest_rc | type == "number") and .guest_rc >= 0 and .guest_rc <= 255' stage12-evidence/result.json
           echo "Atomic pixel signature: $(jq -r .guest_rc stage12-evidence/result.json)"
       - name: Upload atomic pixel-signature probe evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: amiscene-m3-line-stage12-runtime-evidence
+          name: amiscene-m3-line-stage12-runtime-evidence-${{ matrix.repeat }}
           path: stage12-evidence/
           if-no-files-found: warn
 
