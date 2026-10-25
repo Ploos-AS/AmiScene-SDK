@@ -1069,6 +1069,19 @@ jobs:
           repository: Ploos-AS/amiga-runtime
           ref: efa084177768e652f8ff1f43890415ee6bd64608
           path: amiga-runtime-src
+      - name: Instrument guest payload entry and exit
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("amiga-runtime-src/backends/fs-uae/run-hunk")
+          s = p.read_text()
+          before = 'Evidence:payload $payload_args >Evidence:guest-console.txt'
+          after = 'Echo "\\$RC" >Evidence:guest-rc.txt'
+          assert s.count(before) == 1 and s.count(after) == 1
+          s = s.replace(before, 'Echo "PAYLOAD_ENTERED" >Evidence:payload-entered.txt\\n' + before)
+          s = s.replace(after, 'Echo "PAYLOAD_RETURNED" >Evidence:payload-returned.txt\\n' + after)
+          p.write_text(s)
+          PY
       - name: Build qualified amiga-runtime
         run: |
           # Use the public ECR mirror to avoid Docker Hub anonymous pull limits.
