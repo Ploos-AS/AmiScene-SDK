@@ -1078,8 +1078,8 @@ jobs:
           before = 'Evidence:payload $payload_args >Evidence:guest-console.txt'
           after = 'Echo "\\$RC" >Evidence:guest-rc.txt'
           assert s.count(before) == 1 and s.count(after) == 1
-          s = s.replace(before, 'Echo "PAYLOAD_ENTERED" >Evidence:payload-entered.txt\\n' + before)
-          s = s.replace(after, 'Echo "PAYLOAD_RETURNED" >Evidence:payload-returned.txt\\n' + after)
+          s = s.replace(before, 'Echo "PAYLOAD_ENTERED" >Evidence:payload-entered.txt\n' + before)
+          s = s.replace(after, 'Echo "PAYLOAD_RETURNED" >Evidence:payload-returned.txt\n' + after)
           p.write_text(s)
           PY
       - name: Build qualified amiga-runtime
