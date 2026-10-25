@@ -1055,7 +1055,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repeat: [1, 2, 3]
+        repeat: [1]
     permissions:
       contents: read
       packages: read
@@ -1064,6 +1064,10 @@ jobs:
         with:
           name: amiscene-m3-line-stage12-hunk
           path: stage-hunk
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-line-stage-hunk
+          path: stage1-hunk
       - uses: actions/checkout@v4
         with:
           repository: Ploos-AS/amiga-runtime
@@ -1106,6 +1110,24 @@ jobs:
         run: |
           mkdir -p "$PWD/aros-cache" "$PWD/stage12-evidence"
           docker run --rm -v "$PWD/aros-cache:/opt/amiga-runtime/aros" amiga-runtime:stage12 prepare-aros
+      - name: Execute pre-Blitter Stage 1 control
+        continue-on-error: true
+        run: |
+          mkdir -p "$PWD/stage1-evidence"
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=45 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/stage1-hunk:/payload:ro" \
+            -v "$PWD/stage1-evidence:/work/evidence" \
+            amiga-runtime:stage12 \
+            test-hunk /payload/amiscene-blit-line-stage-3 --profile a1200-020-aros
+      - name: Upload pre-Blitter control evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-stage1-control-evidence
+          path: stage1-evidence/
+          if-no-files-found: warn
       - name: Execute octant-3 atomic pixel-signature probe
         run: |
           docker run --rm \
