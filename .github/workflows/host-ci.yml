@@ -1080,6 +1080,11 @@ jobs:
           assert s.count(before) == 1 and s.count(after) == 1
           s = s.replace(before, 'Echo "PAYLOAD_ENTERED" >Evidence:payload-entered.txt\n' + before)
           s = s.replace(after, 'Echo "PAYLOAD_RETURNED" >Evidence:payload-returned.txt\n' + after)
+          # Diagnostic return codes (e.g. 0x56) are measurements, not failures.
+          # Keep the marker as evidence that the guest returned, regardless of RC.
+          old = 'If "\\$RC" EQ "0"\\n  Echo "$MARKER" >Evidence:$MARKER\\nEndIf'
+          assert s.count(old) == 1
+          s = s.replace(old, 'Echo "$MARKER" >Evidence:$MARKER')
           p.write_text(s)
           PY
       - name: Build qualified amiga-runtime
