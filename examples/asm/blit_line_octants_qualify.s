@@ -100,6 +100,14 @@ OCTANT  equ -1
         move.w #$73,d7        ; Blitter BUSY before submitting this command
         bra .done
 .preflight_ready:
+        ifeq STAGE-13
+        ; DMA enabled and Blitter idle: return before submitting a blit.
+        ; This distinguishes preflight hangs from AmiBlitLineStart hangs.
+        move.l (sp)+,a0
+        addq.l #2,sp
+        moveq #0,d7
+        bra .done
+        endif
         bsr AmiBlitLineStart
         ifeq STAGE-2
         ; Stage 2: issue the Blitter command and return without polling
