@@ -86,6 +86,20 @@ OCTANT  equ -1
         move.w #$72,d7        ; DMA not enabled; distinct from raster mismatch
         bra .done
 .dma_ready:
+        ; The shared helper waits for an idle Blitter without a timeout.
+        ; In the diagnostic harness, detect a pre-existing BUSY condition
+        ; before entering that helper so CI can report it instead of hanging.
+        move.l #$00100000,d3
+.preflight_wait:
+        btst #6,DMACONR(a6)
+        beq.s .preflight_ready
+        subq.l #1,d3
+        bne.s .preflight_wait
+        move.l (sp)+,a0
+        addq.l #2,sp
+        move.w #$73,d7        ; Blitter BUSY before submitting this command
+        bra .done
+.preflight_ready:
         bsr AmiBlitLineStart
         ifeq STAGE-2
         ; Stage 2: issue the Blitter command and return without polling
