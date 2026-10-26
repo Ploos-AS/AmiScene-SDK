@@ -90,6 +90,12 @@ jobs:
           name: amiscene-m3-line-octant0-oracle-smoke-hunk
           path: examples/asm/build/amiscene-blit-line-octant0-oracle-smoke
           if-no-files-found: error
+      - name: Upload octant-3 preflight-only Stage 13 Hunk
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-stage13-hunk
+          path: examples/asm/build/amiscene-blit-line-stage13-3
+          if-no-files-found: error
       - name: Upload octant-3 atomic pixel-signature Hunk
         uses: actions/upload-artifact@v4
         with:
@@ -1072,6 +1078,10 @@ jobs:
         with:
           name: amiscene-hunk-return-smoke
           path: return-hunk
+      - uses: actions/download-artifact@v4
+        with:
+          name: amiscene-m3-line-stage13-hunk
+          path: stage13-hunk
       - uses: actions/checkout@v4
         with:
           repository: Ploos-AS/amiga-runtime
@@ -1149,6 +1159,24 @@ jobs:
         with:
           name: amiscene-m3-line-stage1-control-evidence
           path: stage1-evidence/
+          if-no-files-found: warn
+      - name: Execute Stage 13 DMA and BUSY preflight control
+        continue-on-error: true
+        run: |
+          mkdir -p "$PWD/stage13-evidence"
+          docker run --rm \
+            -e AMIGA_RUNTIME_TIMEOUT=90 \
+            -v "$PWD/aros-cache:/opt/amiga-runtime/aros" \
+            -v "$PWD/stage13-hunk:/payload:ro" \
+            -v "$PWD/stage13-evidence:/work/evidence" \
+            amiga-runtime:stage12 \
+            test-hunk /payload/amiscene-blit-line-stage13-3 --profile a1200-020-aros
+      - name: Upload Stage 13 preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amiscene-m3-line-stage13-control-evidence
+          path: stage13-evidence/
           if-no-files-found: warn
       - name: Execute octant-3 atomic pixel-signature probe
         run: |
